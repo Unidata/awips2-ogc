@@ -1,0 +1,12 @@
+bin/
+.metadata/
+test-bin/
+testbin/
+testBin/
+bin-test/
+*.class
+*.pyo
+*.pyc
+*.o
+*.orig
+
