@@ -12,7 +12,6 @@ package com.raytheon.uf.edex.ogc.common.db;
 import java.util.Date;
 import java.util.Set;
 
-import com.raytheon.uf.common.dataplugin.PluginDataObject;
 import com.raytheon.uf.common.dataplugin.persist.PersistableDataObject;
 
 /**

@@ -19,6 +19,9 @@
  **/
 package com.raytheon.uf.edex.ogc.common.spatial;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,9 +43,12 @@ import org.opengis.referencing.ReferenceIdentifier;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.crs.GeographicCRS;
 import org.opengis.referencing.cs.AxisDirection;
+import org.springframework.context.ApplicationContext;
 
 import com.raytheon.uf.common.geospatial.MapUtil;
+import com.raytheon.uf.edex.core.EDEXUtil;
 import com.raytheon.uf.edex.ogc.common.OgcException;
+import com.raytheon.uf.edex.ogc.common.OgcException.Code;
 import com.raytheon.uf.edex.ogc.common.spatial.VerticalCoordinate.Reference;
 
 /**
@@ -56,6 +62,7 @@ import com.raytheon.uf.edex.ogc.common.spatial.VerticalCoordinate.Reference;
  * Date         Ticket#    Engineer    Description
  * ------------ ---------- ----------- --------------------------
  * Feb 17, 2012            bclement     Initial creation
+ * Nov 19, 2015 5087       bclement     reformatted and added DefinedCrsAuthority lookup
  * 
  * </pre>
  * 
@@ -64,37 +71,40 @@ import com.raytheon.uf.edex.ogc.common.spatial.VerticalCoordinate.Reference;
  */
 public class CrsLookup {
 
-	private static final int N_OBJECTS = 10;
+    private static final int N_OBJECTS = 10;
 
-	public static final String GOOGLE_CRS_WKT = "PROJCS[\"Google Mercator\","
-			+ "GEOGCS[\"WGS 84\","
-			+ "DATUM[\"World Geodetic System 1984\","
-			+ "SPHEROID[\"WGS 84\", 6378137.0, 298.257223563, AUTHORITY[\"EPSG\",\"7030\"]],"
-			+ "AUTHORITY[\"EPSG\",\"6326\"]],"
-			+ "PRIMEM[\"Greenwich\", 0.0, AUTHORITY[\"EPSG\",\"8901\"]],"
-			+ "UNIT[\"degree\", 0.017453292519943295],"
-			+ "AXIS[\"Geodetic latitude\", NORTH],"
-			+ "AXIS[\"Geodetic longitude\", EAST],"
-			+ "AUTHORITY[\"EPSG\",\"4326\"]],"
-			+ "PROJECTION[\"Mercator_1SP\"],"
-			+ "PARAMETER[\"semi_minor\", 6378137.0],"
-			+ "PARAMETER[\"latitude_of_origin\", 0.0],"
-			+ "PARAMETER[\"central_meridian\", 0.0],"
-			+ "PARAMETER[\"scale_factor\", 1.0],"
-			+ "PARAMETER[\"false_easting\", 0.0],"
-			+ "PARAMETER[\"false_northing\", 0.0]," + "UNIT[\"m\", 1.0],"
-			+ "AXIS[\"Easting\", EAST]," + " AXIS[\"Northing\", NORTH],"
-			+ "AUTHORITY[\"EPSG\",\"900913\"]]";
+    public static final String GOOGLE_CRS_WKT = "PROJCS[\"Google Mercator\","
+            + "GEOGCS[\"WGS 84\","
+            + "DATUM[\"World Geodetic System 1984\","
+            + "SPHEROID[\"WGS 84\", 6378137.0, 298.257223563, AUTHORITY[\"EPSG\",\"7030\"]],"
+            + "AUTHORITY[\"EPSG\",\"6326\"]],"
+            + "PRIMEM[\"Greenwich\", 0.0, AUTHORITY[\"EPSG\",\"8901\"]],"
+            + "UNIT[\"degree\", 0.017453292519943295],"
+            + "AXIS[\"Geodetic latitude\", NORTH],"
+            + "AXIS[\"Geodetic longitude\", EAST],"
+            + "AUTHORITY[\"EPSG\",\"4326\"]],"
+            + "PROJECTION[\"Mercator_1SP\"],"
+            + "PARAMETER[\"semi_minor\", 6378137.0],"
+            + "PARAMETER[\"latitude_of_origin\", 0.0],"
+            + "PARAMETER[\"central_meridian\", 0.0],"
+            + "PARAMETER[\"scale_factor\", 1.0],"
+            + "PARAMETER[\"false_easting\", 0.0],"
+            + "PARAMETER[\"false_northing\", 0.0]," + "UNIT[\"m\", 1.0],"
+            + "AXIS[\"Easting\", EAST]," + " AXIS[\"Northing\", NORTH],"
+            + "AUTHORITY[\"EPSG\",\"900913\"]]";
 
-	protected static final LRUMap cache = new LRUMap(N_OBJECTS);
+    protected static final LRUMap cache = new LRUMap(N_OBJECTS);
 
-	protected static CoordinateReferenceSystem googleCrs;
+    protected static CoordinateReferenceSystem googleCrs;
 
-	protected static final Pattern OGC_CODE_PATTERN = Pattern
-			.compile("^([a-zA-Z]+)([0-9]+)$");
+    protected static final Pattern OGC_CODE_PATTERN = Pattern
+            .compile("^([a-zA-Z]+)([0-9]+)$");
 
     public static final Pattern EXTENDED_3D_CRS_PATTERN = Pattern.compile(
             "(urn.*)_plus_z_in_([^_]+)(_([^_]+))?", Pattern.CASE_INSENSITIVE);
+
+    public static final Pattern EXTERNAL_CRS_PATTERN = Pattern.compile(
+            "^https?:.*$", Pattern.CASE_INSENSITIVE);
 
     /**
      * Lookup coordinate reference system object from OGC URN or Code
@@ -105,17 +115,21 @@ public class CrsLookup {
      * @throws FactoryException
      * @throws OgcException
      */
-	public static CoordinateReferenceSystem lookup(String crs)
+    public static CoordinateReferenceSystem lookup(String crs)
             throws NoSuchAuthorityCodeException, FactoryException, OgcException {
-		if (crs == null) {
-			return null;
-		}
+        if (crs == null) {
+            return null;
+        }
         Matcher m = EXTENDED_3D_CRS_PATTERN.matcher(crs);
         if (m.matches()) {
             return decodeExtended3D(m);
         }
+        m = EXTERNAL_CRS_PATTERN.matcher(crs);
+        if (m.matches()) {
+            return resolveExternalCrs(crs);
+        }
         return lookupFromCache(crs);
-	}
+    }
 
     /**
      * Parse extended CRS string that has matched
@@ -180,18 +194,50 @@ public class CrsLookup {
         if (crs.startsWith(NativeCrsAuthority.NATIVE_CRS_PREFIX)) {
             return NativeCrsFactory.lookup(crs);
         }
-        crs = normalize(crs);
+        String normalized = normalize(crs);
         CoordinateReferenceSystem rval;
         synchronized (cache) {
-            rval = (CoordinateReferenceSystem) cache.get(crs);
+            rval = (CoordinateReferenceSystem) cache.get(normalized);
             if (rval == null) {
-                rval = decodeCrs(crs);
-                if (rval != null) {
-                    cache.put(crs, rval);
+                /* don't cache from defined crs auth, it handles its own */
+                rval = getDefinedCrsAuthority().lookup(crs);
+                if (rval == null) {
+                    rval = decodeCrs(normalized);
+                    if (rval != null) {
+                        cache.put(normalized, rval);
+                    }
                 }
             }
         }
         return rval;
+    }
+
+    protected static IDefinedCrsAuthority getDefinedCrsAuthority() {
+        IDefinedCrsAuthority rval = null;
+        ApplicationContext context = EDEXUtil.getSpringContext();
+        String[] authorityBeans = context
+                .getBeanNamesForType(IDefinedCrsAuthority.class);
+        if (authorityBeans != null && authorityBeans.length > 0) {
+            String beanId = authorityBeans[0];
+            rval = context.getBean(beanId, IDefinedCrsAuthority.class);
+        }
+        return rval;
+    }
+
+    protected static CoordinateReferenceSystem resolveExternalCrs(
+            String urlString) throws OgcException {
+        /*
+         * TODO we could do an http request to get the CRS definition, but that
+         * may have security consequences. For now, see if we are hosting the
+         * external crs definition on this server.
+         */
+        try {
+            URL url = new URL(urlString);
+            return getDefinedCrsAuthority().resolve(url);
+        } catch (MalformedURLException | URISyntaxException e) {
+            throw new OgcException(Code.InvalidParameterValue,
+                    "Invalid external CRS URL: " + urlString, e);
+        }
     }
 
     /**
@@ -202,18 +248,18 @@ public class CrsLookup {
      * @throws NoSuchAuthorityCodeException
      * @throws FactoryException
      */
-	protected static CoordinateReferenceSystem decodeCrs(String crs)
-			throws NoSuchAuthorityCodeException, FactoryException {
-		if (crs.equalsIgnoreCase("epsg:900913")
-				|| crs.equalsIgnoreCase("epsg:3857")) {
-			return getGoogleCrs();
-		}
+    protected static CoordinateReferenceSystem decodeCrs(String crs)
+            throws NoSuchAuthorityCodeException, FactoryException {
+        if (crs.equalsIgnoreCase("epsg:900913")
+                || crs.equalsIgnoreCase("epsg:3857")) {
+            return getGoogleCrs();
+        }
         if (crs.equalsIgnoreCase("epsg:4979")) {
             return create3d(crs, MapUtil.LATLON_PROJECTION, SI.METER,
                     Reference.ABOVE_ELLIPSOID);
         }
-		return CRS.decode(crs, true);
-	}
+        return CRS.decode(crs, true);
+    }
 
     /**
      * Construct google crs, caches result. Can be called multiple times.
@@ -221,16 +267,17 @@ public class CrsLookup {
      * @return
      * @throws FactoryException
      */
-	protected static CoordinateReferenceSystem getGoogleCrs()
-			throws FactoryException {
-		if (googleCrs == null) {
-			googleCrs = CRS.parseWKT(GOOGLE_CRS_WKT);
-		}
-		return googleCrs;
-	}
+    protected static CoordinateReferenceSystem getGoogleCrs()
+            throws FactoryException {
+        if (googleCrs == null) {
+            googleCrs = CRS.parseWKT(GOOGLE_CRS_WKT);
+        }
+        return googleCrs;
+    }
 
     /**
      * Normalize OGC URNs and Codes to be code in the following format
+     * 
      * <pre>
      * [auth]:[code]
      * </pre>
@@ -239,23 +286,23 @@ public class CrsLookup {
      * @return
      */
     protected static String normalize(String crs) {
-		String[] parts = crs.split(":");
-		String rval;
-		if (parts.length == 2) {
-			// good form
-			rval = crs;
-		} else if (parts.length == 7) {
-			// probably an OGC URN
-			rval = constructCode(parts[4], parts[6]);
-		} else if (parts.length == 6) {
-			// OGC URN without version?
-			rval = constructCode(parts[4], parts[5]);
-		} else {
+        String[] parts = crs.split(":");
+        String rval;
+        if (parts.length == 2) {
+            // good form
+            rval = crs;
+        } else if (parts.length == 7) {
+            // probably an OGC URN
+            rval = constructCode(parts[4], parts[6]);
+        } else if (parts.length == 6) {
+            // OGC URN without version?
+            rval = constructCode(parts[4], parts[5]);
+        } else {
             // unknown form, try it anyway
-			rval = crs;
-		}
-		return rval.toLowerCase();
-	}
+            rval = crs;
+        }
+        return rval.toLowerCase();
+    }
 
     /**
      * Construct an Extended OGC CRS URN from the composite bounds
@@ -318,15 +365,15 @@ public class CrsLookup {
      * @param code
      * @return
      */
-	protected static String constructCode(String authority, String code) {
-		if (!authority.equalsIgnoreCase("epsg")
-				&& !authority.equalsIgnoreCase("crs")) {
-			// geotools database only has epsg codes
-			// try a generic crs authority
-			authority = "crs";
-		}
-		return authority + ":" + code;
-	}
+    protected static String constructCode(String authority, String code) {
+        if (!authority.equalsIgnoreCase("epsg")
+                && !authority.equalsIgnoreCase("crs")) {
+            // geotools database only has epsg codes
+            // try a generic crs authority
+            authority = "crs";
+        }
+        return authority + ":" + code;
+    }
 
     /**
      * @param crs

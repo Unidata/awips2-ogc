@@ -33,17 +33,11 @@ public class DefaultPointDataDimension extends SimpleDimension {
 
     private static final long serialVersionUID = 2947254963150347405L;
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Set<String> getValues() {
         return new HashSet<String>(0);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getDefaultValue(SimpleLayer<? extends SimpleDimension> layer) {
         return null;

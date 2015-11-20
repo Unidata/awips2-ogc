@@ -177,11 +177,6 @@ public class ComparisonFilter extends AbstractPdoFilter {
         return value;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         if (op.equals(CompOp.NULL)) {
@@ -190,11 +185,6 @@ public class ComparisonFilter extends AbstractPdoFilter {
         return "[" + field + " " + op + " " + value + "]";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -205,11 +195,6 @@ public class ComparisonFilter extends AbstractPdoFilter {
         return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

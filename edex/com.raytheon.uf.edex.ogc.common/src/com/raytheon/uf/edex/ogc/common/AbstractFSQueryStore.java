@@ -40,6 +40,7 @@ import com.raytheon.uf.edex.ogc.common.OgcException.Code;
  * ------------ ---------- ----------- --------------------------
  * Feb 15, 2013            bclement     Initial creation
  * Nov  8, 2013 1314       bclement     updated lock to use read/write
+ * Nov 19, 2015 5087       bclement     comment cleanup
  * 
  * </pre>
  * 
@@ -66,6 +67,8 @@ public abstract class AbstractFSQueryStore<T> extends AbstractFsStore {
     private final KeyLocker<String> locker = new KeyLocker<String>();
 
     /**
+     * Store query object associated with id
+     * 
      * @param id
      * @param query
      * @throws Exception
@@ -122,11 +125,12 @@ public abstract class AbstractFSQueryStore<T> extends AbstractFsStore {
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Retrieve query with id from store
      * 
-     * @see
-     * com.raytheon.uf.edex.wfs.querystore.QueryStore#retrieve(java.lang.String)
+     * @param id
+     * @return null if no query with id exists
+     * @throws OgcException
      */
     public T retrieve(String id) throws OgcException {
         T rval;
@@ -144,7 +148,7 @@ public abstract class AbstractFSQueryStore<T> extends AbstractFsStore {
      * This must be externally synchronized
      * 
      * @param id
-     * @return
+     * @return null if no query with id exists
      * @throws Exception
      */
     private T retrieveObject(String id) throws OgcException {
@@ -207,11 +211,10 @@ public abstract class AbstractFSQueryStore<T> extends AbstractFsStore {
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Remove query with id from store
      * 
-     * @see
-     * com.raytheon.uf.edex.wfs.querystore.QueryStore#remove(java.lang.String)
+     * @param id
      */
     public void remove(String id) {
         KeyLock<String> lock = locker.getLock(id);
@@ -229,6 +232,8 @@ public abstract class AbstractFSQueryStore<T> extends AbstractFsStore {
     }
 
     /**
+     * List query IDs in store
+     * 
      * @return
      * @throws Exception
      */
@@ -256,6 +261,13 @@ public abstract class AbstractFSQueryStore<T> extends AbstractFsStore {
         return new File(storeLocation, encode(id));
     }
 
+    /**
+     * Parse query XML into query object
+     * 
+     * @param xml
+     * @return
+     * @throws OgcException
+     */
     protected abstract T unmarshal(String xml) throws OgcException;
 
 }

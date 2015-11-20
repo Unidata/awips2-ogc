@@ -23,6 +23,7 @@ import java.lang.reflect.Constructor;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.time.DateUtils;
 
@@ -42,7 +43,8 @@ import com.raytheon.uf.edex.ogc.common.OgcException.Code;
  * 
  * Date         Ticket#    Engineer    Description
  * ------------ ---------- ----------- --------------------------
- * 2011            bclement     Initial creation
+ * 2011                    bclement     Initial creation
+ * Nov 19, 2015 5087       bclement     added getLatestTime()
  * 
  * </pre>
  * 
@@ -236,6 +238,19 @@ public abstract class LayerCollector<D extends SimpleDimension, L extends Simple
      */
     public void setAddonFactory(CollectorAddonFactory<D, L, R> addonFactory) {
         this.addonFactory = addonFactory;
+    }
+
+    @Override
+    public Date getLatestTime(String layerName) throws OgcException {
+        Date rval = null;
+        L layer = getLayer(layerName);
+        if (layer != null) {
+            TreeSet<Date> times = layer.getTimes();
+            if (times != null && !times.isEmpty()) {
+                rval = times.last();
+            }
+        }
+        return rval;
     }
 
 }

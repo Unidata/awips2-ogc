@@ -31,25 +31,21 @@ public class NoopStatsRecorder implements IStatsRecorder {
     @Override
     public void recordRequest(long time, long duration, ServiceType service,
             OperationType op, boolean success) {
-        // TODO Auto-generated method stub
         //do nothing
     }
 
     @Override
     public long getMinRequestTime(ServiceType service, OperationType op) {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
     public long getMaxRequestTime(ServiceType service, OperationType op) {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
     public long getAvgRequestTime(ServiceType service, OperationType op) {
-        // TODO Auto-generated method stub
         return 0;
     }
 

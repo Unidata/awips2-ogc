@@ -83,12 +83,6 @@ public class FsLayerStore extends AbstractFsStore implements ILayerStore {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.raytheon.uf.edex.ogc.common.db.LayerStore#get(java.lang.String,
-     * java.lang.Class)
-     */
     @Override
     public <D extends SimpleDimension, L extends SimpleLayer<D>> L get(
             String id, Class<L> c) throws OgcException {
@@ -210,12 +204,6 @@ public class FsLayerStore extends AbstractFsStore implements ILayerStore {
         return new File(getClassDirWrite(c, createPath), encode(id));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.ogc.common.db.LayerStore#getAll(java.lang.Class)
-     */
     @Override
     public <D extends SimpleDimension, L extends SimpleLayer<D>> List<L> getAll(
             Class<L> c) throws OgcException {
@@ -243,13 +231,6 @@ public class FsLayerStore extends AbstractFsStore implements ILayerStore {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.ogc.common.db.LayerStore#createOrUpdate(com.raytheon
-     * .uf.edex.ogc.common.db.SimpleLayer)
-     */
     @Override
     public void createOrUpdate(SimpleLayer<? extends SimpleDimension> l)
             throws OgcException {
@@ -264,13 +245,6 @@ public class FsLayerStore extends AbstractFsStore implements ILayerStore {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.ogc.common.db.LayerStore#createOrUpdate(java.util
-     * .List)
-     */
     @Override
     public void createOrUpdate(
             List<SimpleLayer<? extends SimpleDimension>> layers)
@@ -314,13 +288,6 @@ public class FsLayerStore extends AbstractFsStore implements ILayerStore {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.ogc.common.db.LayerStore#delete(java.lang.String,
-     * java.lang.Class)
-     */
     @Override
     public void delete(String id, Class<? extends SimpleLayer<?>> c)
             throws OgcException {
@@ -340,12 +307,6 @@ public class FsLayerStore extends AbstractFsStore implements ILayerStore {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.ogc.common.db.LayerStore#deleteAll(java.lang.Class)
-     */
     @Override
     public void deleteAll(Class<? extends SimpleLayer<?>> c)
             throws OgcException {

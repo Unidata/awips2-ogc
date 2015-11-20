@@ -81,13 +81,6 @@ public class SpatialFilter extends AbstractPdoFilter {
         this.op = op;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.ogc.common.filter.AbstractFilterOp#matches(com.raytheon
-     * .uf.common.dataplugin.PluginDataObject)
-     */
     @Override
     public boolean matches(PluginDataObject pdo) {
 		boolean rval = true;
@@ -369,11 +362,6 @@ public class SpatialFilter extends AbstractPdoFilter {
         return "[geometry " + op + " " + geometry + "]";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -384,11 +372,6 @@ public class SpatialFilter extends AbstractPdoFilter {
         return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

@@ -90,20 +90,6 @@ public class WfsHttpHandler extends OgcHttpHandler {
     }
 
     @Override
-    public void handle(OgcHttpRequest req) {
-        try {
-            statusHandler.info("Request from: "
-                    + req.getRequest().getRemoteAddr());
-            long time = System.currentTimeMillis();
-            handleInternal(req);
-            long time2 = System.currentTimeMillis();
-            statusHandler.info("Processed: " + req.getRequest().getRemoteAddr()
-                    + " in " + (time2 - time) + " ms");
-        } catch (Exception e) {
-            statusHandler.error("Unable to handle request", e);
-        }
-    }
-
     protected void handleInternal(OgcHttpRequest req) throws Exception {
         Map<String, Object> headers = req.getHeaders();
         ServletOgcResponse response = new ServletOgcResponse(req.getResponse());

@@ -19,6 +19,7 @@
  **/
 package com.raytheon.uf.edex.ogc.common.db;
 
+import java.util.Date;
 import java.util.List;
 
 import com.raytheon.uf.edex.ogc.common.OgcException;
@@ -34,7 +35,8 @@ import com.raytheon.uf.edex.ogc.common.OgcException;
  * 
  * Date         Ticket#    Engineer    Description
  * ------------ ---------- ----------- --------------------------
- * Sept 11, 2012            bclement     Initial creation
+ * Sep 11, 2012            bclement     Initial creation
+ * Nov 19, 2015 5087       bclement     added getLatestTime()
  * 
  * </pre>
  * 
@@ -57,5 +59,13 @@ public interface ILayerCache<D extends SimpleDimension, L extends SimpleLayer<D>
      * @throws OgcException
      */
 	public L getLayer(String name) throws OgcException;
+
+    /**
+     * Get the latest time available for layer
+     * 
+     * @param layerName
+     * @return null if none found
+     */
+    public Date getLatestTime(String layerName) throws OgcException;
 
 }

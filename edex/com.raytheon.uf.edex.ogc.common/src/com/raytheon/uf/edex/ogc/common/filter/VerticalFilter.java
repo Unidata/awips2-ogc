@@ -61,9 +61,6 @@ public class VerticalFilter extends AbstractPdoFilter {
         cache.put(vert.getUnits(), vert);
     }
 
-    /* (non-Javadoc)
-     * @see com.raytheon.uf.edex.ogc.common.filter.AbstractPdoFilter#matches(com.raytheon.uf.common.dataplugin.PluginDataObject)
-     */
     @SuppressWarnings("unchecked")
     @Override
     public boolean matches(PluginDataObject pdo) {

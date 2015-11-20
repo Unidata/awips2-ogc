@@ -23,6 +23,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -50,23 +51,23 @@ public class OgcLayer {
 
 	protected OgcLayer parent;
 
-	protected List<OgcLayer> children;
+    protected Collection<OgcLayer> children;
 
 	protected String name;
 
 	protected String title;
 
-	protected List<String> keywords;
+    protected Collection<String> keywords;
 
 	protected String abs;
 
-	protected List<OgcStyle> styles;
+    protected Collection<OgcStyle> styles;
 
 	protected OgcGeoBoundingBox geoBoundingBox;
 
-	protected List<OgcBoundingBox> boundingBox;
+    protected Collection<OgcBoundingBox> boundingBox;
 
-	protected List<String> crs;
+    protected Collection<String> crs;
 
 	protected double minScaleDenom = Double.NaN;
 
@@ -76,7 +77,7 @@ public class OgcLayer {
 
 	protected int sizeRecord = 0;
 
-	protected List<OgcDimension> dimensions;
+    protected Collection<OgcDimension> dimensions;
 
 	public static String keySeparator = "/";
 
@@ -84,7 +85,7 @@ public class OgcLayer {
 		this.crs = addToList(this.crs, crs);
 	}
 
-	protected <T> List<T> addToList(List<T> l, T item) {
+    protected <T> Collection<T> addToList(Collection<T> l, T item) {
 		if (l == null) {
 			l = new ArrayList<T>();
 		}
@@ -165,7 +166,7 @@ public class OgcLayer {
 	/**
 	 * @return the dimentions
 	 */
-	public List<OgcDimension> getDimensions() {
+    public Collection<OgcDimension> getDimensions() {
 		return dimensions;
 	}
 
@@ -173,7 +174,7 @@ public class OgcLayer {
 	 * @param dimensions
 	 *            the dimentions to set
 	 */
-	public void setDimensions(List<OgcDimension> dimensions) {
+    public void setDimensions(Collection<OgcDimension> dimensions) {
 		this.dimensions = dimensions;
 	}
 
@@ -185,19 +186,19 @@ public class OgcLayer {
 		this.parent = parent;
 	}
 
-	public List<OgcLayer> getChildren() {
+    public Collection<OgcLayer> getChildren() {
 		return children;
 	}
 
-	public void setChildren(List<OgcLayer> children) {
+    public void setChildren(Collection<OgcLayer> children) {
 		this.children = children;
 	}
 
-	public List<OgcStyle> getStyles() {
+    public Collection<OgcStyle> getStyles() {
 		return styles;
 	}
 
-	public void setStyles(List<OgcStyle> styles) {
+    public void setStyles(Collection<OgcStyle> styles) {
 		this.styles = styles;
 	}
 
@@ -216,7 +217,7 @@ public class OgcLayer {
 		this.geoBoundingBox = geoBoundingBox;
 	}
 
-	public List<String> getCrs() {
+    public Collection<String> getCrs() {
 		return crs;
 	}
 
@@ -227,7 +228,7 @@ public class OgcLayer {
 	/**
 	 * @return the boundingBox
 	 */
-	public List<OgcBoundingBox> getBoundingBox() {
+    public Collection<OgcBoundingBox> getBoundingBox() {
 		return boundingBox;
 	}
 
@@ -284,7 +285,7 @@ public class OgcLayer {
 		this.title = title;
 	}
 
-	public List<String> getKeywords() {
+    public Collection<String> getKeywords() {
 		return keywords;
 	}
 

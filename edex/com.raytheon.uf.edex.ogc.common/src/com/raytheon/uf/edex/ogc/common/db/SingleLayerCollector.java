@@ -16,15 +16,6 @@
  * 
  * See the AWIPS II Master Rights File ("Master Rights File.pdf") for
  * further licensing information.
- *
- *
- * SOFTWARE HISTORY
- *
- * Date         Ticket#    Engineer    Description
- * ------------ ---------- ----------- --------------------------
- * Sep 11, 2012            bclement     Initial creation
- * Aug 18, 2013  #2097     dhladky      Updates for interfaces etc.
- *
  */
 package com.raytheon.uf.edex.ogc.common.db;
 
@@ -58,7 +49,9 @@ import com.vividsolutions.jts.geom.Envelope;
  * 
  * Date         Ticket#    Engineer    Description
  * ------------ ---------- ----------- --------------------------
- * 2011            bclement     Initial creation
+ * Sep 11, 2012            bclement     Initial creation
+ * Aug 18, 2013  #2097     dhladky      Updates for interfaces etc.
+ * Nov 19, 2015 5087       bclement     made fields final
  * 
  * </pre>
  * 
@@ -73,9 +66,9 @@ public abstract class SingleLayerCollector<D extends SimpleDimension, L extends 
 
     private L _layer;
 
-    protected ReadWriteLock lock = new ReentrantReadWriteLock();
+    protected final ReadWriteLock lock = new ReentrantReadWriteLock();
 
-    protected String layerName;
+    protected final String layerName;
 
     /**
      * @param transformer
@@ -146,11 +139,6 @@ public abstract class SingleLayerCollector<D extends SimpleDimension, L extends 
         return _layer;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.raytheon.uf.edex.ogc.common.db.LayerCollector#newLayer()
-     */
     @Override
     protected L newLayer() {
         L rval = super.newLayer();
@@ -227,11 +215,6 @@ public abstract class SingleLayerCollector<D extends SimpleDimension, L extends 
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.raytheon.uf.edex.ogc.common.db.LayerCache#getLayers()
-     */
     @Override
     public List<L> getLayers() {
         ArrayList<L> rval = new ArrayList<L>(1);
@@ -257,13 +240,6 @@ public abstract class SingleLayerCollector<D extends SimpleDimension, L extends 
         return rval;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.ogc.common.db.LayerCollector#copy(com.raytheon.uf
-     * .edex.ogc.common.db.SimpleLayer)
-     */
     @Override
     protected L copy(L orig) {
         L rval = newLayer();
@@ -272,12 +248,6 @@ public abstract class SingleLayerCollector<D extends SimpleDimension, L extends 
         return rval;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.ogc.common.db.LayerCache#getLayer(java.lang.String)
-     */
     @Override
     public L getLayer(String name) {
         if (layerName.equals(name)) {

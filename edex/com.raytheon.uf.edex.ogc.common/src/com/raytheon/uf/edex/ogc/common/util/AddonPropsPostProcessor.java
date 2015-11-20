@@ -51,9 +51,6 @@ public class AddonPropsPostProcessor implements BeanPostProcessor {
 		this.propsMap = propsMap;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessBeforeInitialization(java.lang.Object, java.lang.String)
-	 */
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName)
 			throws BeansException {
@@ -67,9 +64,6 @@ public class AddonPropsPostProcessor implements BeanPostProcessor {
 		return bean;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object, java.lang.String)
-	 */
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName)
 			throws BeansException {

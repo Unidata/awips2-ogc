@@ -10,13 +10,11 @@
 package com.raytheon.uf.edex.ogc.common;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
-
-import org.apache.cxf.helpers.IOUtils;
 
 import com.raytheon.uf.common.localization.IPathManager;
 import com.raytheon.uf.common.localization.LocalizationContext;
@@ -33,6 +31,7 @@ import com.raytheon.uf.common.localization.PathManagerFactory;
  * ------------ ---------- ----------- --------------------------
  * Mar 11, 2013            bclement     Initial creation
  * Aug 18, 2013  #2097     dhladky      Moved to configured
+ * Nov 19, 2015 5087       bclement     removed CXF dependency
  * 
  * </pre>
  * 
@@ -168,12 +167,7 @@ public class BasicFileStore {
      */
     public void store(String id, InputStream in) throws IOException {
         File f = reserveFile(id);
-        FileOutputStream out = new FileOutputStream(f);
-        try {
-            IOUtils.copy(in, out);
-        } finally {
-            out.close();
-        }
+        Files.copy(in, f.toPath());
     }
 
     /**

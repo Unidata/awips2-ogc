@@ -38,8 +38,8 @@ import com.raytheon.uf.common.serialization.annotations.DynamicSerializeElement;
  * SOFTWARE HISTORY
  * Date         Ticket#    Engineer    Description
  * ------------ ---------- ----------- --------------------------
- * 08/09/2012   754       dhladky      initial creation, based on B Clements original
- * 04/22/2013   1746      dhladky      Removed DB dependency from WFS code
+ * Aug 09, 2012 754       dhladky      initial creation, based on B Clements original
+ * Apr 04, 2013 1746      dhladky      Removed DB dependency from WFS code
  * </pre>
  * 
  * @author dhladky
@@ -193,11 +193,6 @@ public abstract class SimpleDimension implements Comparable<SimpleDimension>,
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return "[name=" + name + ", values=" + getValues() + "]";

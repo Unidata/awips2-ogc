@@ -41,34 +41,22 @@ public class StoredHttpResponse implements IOgcHttpResponse {
 
     private String characterEncoding;
 
-    /* (non-Javadoc)
-     * @see com.raytheon.uf.edex.ogc.common.output.OgcHttpResponse#getOutputStream()
-     */
     @Override
     public OutputStream getOutputStream() throws IOException {
         baos = new ByteArrayOutputStream();
         return baos;
     }
 
-    /* (non-Javadoc)
-     * @see com.raytheon.uf.edex.ogc.common.output.OgcHttpResponse#setStatus(int)
-     */
     @Override
     public void setStatus(int status) {
         this.status = status;
     }
 
-    /* (non-Javadoc)
-     * @see com.raytheon.uf.edex.ogc.common.output.OgcHttpResponse#setContentType(java.lang.String)
-     */
     @Override
     public void setContentType(String type) {
         this.contentType = type;
     }
 
-    /* (non-Javadoc)
-     * @see com.raytheon.uf.edex.ogc.common.output.OgcHttpResponse#setCharacterEncoding(java.lang.String)
-     */
     @Override
     public void setCharacterEncoding(String encoding) {
         this.characterEncoding = encoding;

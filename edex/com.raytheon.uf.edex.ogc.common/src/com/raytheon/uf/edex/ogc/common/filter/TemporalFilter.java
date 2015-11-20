@@ -50,13 +50,6 @@ public class TemporalFilter extends AbstractPdoFilter {
         this.op = op;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.ogc.common.filter.AbstractFilterOp#matches(com.raytheon
-     * .uf.common.dataplugin.PluginDataObject)
-     */
     @Override
     public boolean matches(PluginDataObject pdo) {
         DataTime other = pdo.getDataTime();
@@ -199,11 +192,6 @@ public class TemporalFilter extends AbstractPdoFilter {
         return op;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         String tstamp;
@@ -215,11 +203,6 @@ public class TemporalFilter extends AbstractPdoFilter {
         return "[time " + op + " " + tstamp + "]";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -229,11 +212,6 @@ public class TemporalFilter extends AbstractPdoFilter {
         return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

@@ -42,11 +42,6 @@ public class PeekingIterator<T> implements Iterator<T> {
         this.iter = iter;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#hasNext()
-     */
     @Override
     public boolean hasNext() {
         if (dirty) {
@@ -55,11 +50,6 @@ public class PeekingIterator<T> implements Iterator<T> {
         return iter.hasNext();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#next()
-     */
     @Override
     public T next() {
         if (dirty) {

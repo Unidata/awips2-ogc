@@ -19,8 +19,7 @@
  **/
 package com.raytheon.uf.edex.ogc.common;
 
-import java.util.List;
-
+import java.util.Collection;
 
 /**
  * Styling interface for retrieving style information for layers
@@ -32,6 +31,7 @@ import java.util.List;
  * Date         Ticket#    Engineer    Description
  * ------------ ---------- ----------- --------------------------
  * Mar 29, 2012            bclement     Initial creation
+ * Nov 19, 2015 5087       bclement     return Collection instead of list
  * 
  * </pre>
  * 
@@ -40,17 +40,22 @@ import java.util.List;
  */
 public interface StyleLookup {
 
-	/**
-	 * @param layername
-	 * @return the name of the default style for layer
-	 */
-	public String lookup(String layername);
+    /**
+     * @param layername
+     * @return the name of the default style for layer
+     */
+    public String lookup(String layername);
 
     /**
      * @return all styles
      */
-	public List<OgcStyle> getStyles();
+    public Collection<OgcStyle> getStyles();
 
-	public void setLoader(ClassLoader loader);
+    /**
+     * Set class loader to use when locating resources
+     * 
+     * @param loader
+     */
+    public void setLoader(ClassLoader loader);
 
 }

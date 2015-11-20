@@ -51,7 +51,8 @@ import com.raytheon.uf.edex.ogc.common.db.SimpleLayer;
  * 
  * Date         Ticket#    Engineer    Description
  * ------------ ---------- ----------- --------------------------
- * Nov 3, 2011            bclement     Initial creation
+ * Nov  3, 2011            bclement     Initial creation
+ * Nov 19, 2015 5087       bclement     converted to static utility
  * 
  * </pre>
  * 
@@ -64,10 +65,11 @@ public class ForecastTimeUtil {
 
 	protected static final String fcstKey = "FORECAST_OFFSET";
 
-	protected Pattern fcstPattern = Pattern
+    protected static final Pattern fcstPattern = Pattern
 			.compile("^([0-9]+)([sSmMhHdD]?).*$");
 
-	protected IUFStatusHandler log = UFStatus.getHandler(this.getClass());
+    protected static final IUFStatusHandler log = UFStatus
+            .getHandler(ForecastTimeUtil.class);
 
 	public static final byte NONE = 0x00;
 
@@ -95,7 +97,7 @@ public class ForecastTimeUtil {
 	 * @return
 	 * @throws WmsException
 	 */
-    public SortedSet<DataTime> getDataTimes(
+    public static SortedSet<DataTime> getDataTimes(
             SimpleLayer<? extends SimpleDimension> layer,
             Map<String, String> dimensions) throws OgcException {
         return getDataTimes(layer, (String) null, dimensions);
@@ -113,7 +115,7 @@ public class ForecastTimeUtil {
 	 * @return
 	 * @throws WmsException
 	 */
-    public SortedSet<DataTime> getDataTimes(
+    public static SortedSet<DataTime> getDataTimes(
             SimpleLayer<? extends SimpleDimension> layer, String time,
 			Map<String, String> dimensions) throws OgcException {
 		Calendar validTime = null;
@@ -123,7 +125,7 @@ public class ForecastTimeUtil {
 		return getDataTimes(layer, validTime, dimensions);
 	}
 
-    public SortedSet<DataTime> getDataTimes(
+    public static SortedSet<DataTime> getDataTimes(
             SimpleLayer<? extends SimpleDimension> layer, Date time,
             Map<String, String> dimensions) throws OgcException {
         Calendar validTime = null;
@@ -134,7 +136,7 @@ public class ForecastTimeUtil {
         return getDataTimes(layer, validTime, dimensions);
     }
 
-    protected SortedSet<DataTime> getDataTimes(
+    protected static SortedSet<DataTime> getDataTimes(
             SimpleLayer<? extends SimpleDimension> layer, Calendar time,
             Map<String, String> dimensions) throws OgcException {
         String refStr = dimensions.get(refKey);
@@ -175,7 +177,7 @@ public class ForecastTimeUtil {
 	 * @return
 	 * @throws OgcException
 	 */
-    protected DataTime getDataTimeFcst(String fcstStr,
+    public static DataTime getDataTimeFcst(String fcstStr,
             SimpleLayer<? extends SimpleDimension> layer)
 			throws OgcException {
 		int fcst = parseForcast(fcstStr);
@@ -211,7 +213,7 @@ public class ForecastTimeUtil {
 	 * @return
 	 * @throws WmsException
 	 */
-    protected SimpleDimension getDimension(
+    public static SimpleDimension getDimension(
             SimpleLayer<? extends SimpleDimension> layer, String dimension)
             throws OgcException {
         SimpleDimension dim;
@@ -244,7 +246,7 @@ public class ForecastTimeUtil {
 	 * @return
 	 * @throws WmsException
 	 */
-    protected SortedSet<DataTime> getCandidates(
+    protected static SortedSet<DataTime> getCandidates(
             SimpleLayer<? extends SimpleDimension> layer, Calendar validTime)
             throws OgcException {
 		SimpleDimension refDim = getDimension(layer, refKey);
@@ -275,7 +277,7 @@ public class ForecastTimeUtil {
 		return rval;
 	}
 
-	protected boolean equals(Calendar one, Calendar two) {
+    public static boolean equals(Calendar one, Calendar two) {
 		return one.getTimeInMillis() == two.getTimeInMillis();
 	}
 
@@ -286,7 +288,7 @@ public class ForecastTimeUtil {
 	 * @return
 	 * @throws WmsException
 	 */
-	protected ArrayList<Calendar> convert(Set<String> times)
+    public static ArrayList<Calendar> convert(Set<String> times)
 			throws OgcException {
 		ArrayList<Calendar> refs = new ArrayList<Calendar>(times.size());
 		for (String val : times) {
@@ -295,7 +297,8 @@ public class ForecastTimeUtil {
 		return refs;
 	}
 
-	protected static Calendar parseTimeString(String time) throws OgcException {
+    public static Calendar parseTimeString(String time)
+            throws OgcException {
 		try {
 			return DatatypeConverter.parseDateTime(time);
 		} catch (Exception e) {
@@ -311,7 +314,7 @@ public class ForecastTimeUtil {
 	 * @return
 	 * @throws WmsException
 	 */
-	protected DataTime getDataTimeRef(String refStr, Calendar validTime)
+    public static DataTime getDataTimeRef(String refStr, Calendar validTime)
 			throws OgcException {
 		Calendar ref = parseTimeStr(refStr, refKey);
 		long diff = validTime.getTimeInMillis() - ref.getTimeInMillis();
@@ -325,7 +328,7 @@ public class ForecastTimeUtil {
 	 * @return valid datatime with lowest forecast offset
 	 * @throws WmsException
 	 */
-    protected DataTime getDataTimeRef(String refStr,
+    public static DataTime getDataTimeRef(String refStr,
             SimpleLayer<? extends SimpleDimension> layer) throws OgcException {
 		Calendar ref = parseTimeStr(refStr, refKey);
         SimpleDimension fcstDim = layer.getDimension(fcstKey);
@@ -357,7 +360,7 @@ public class ForecastTimeUtil {
 	 * @return
 	 * @throws WmsException
 	 */
-	protected Calendar parseTimeStr(String time, String name)
+    protected static Calendar parseTimeStr(String time, String name)
 			throws OgcException {
 		Calendar rval;
 		try {
@@ -377,7 +380,7 @@ public class ForecastTimeUtil {
 	 * @return
 	 * @throws WmsException
 	 */
-	protected DataTime getDataTimeFcst(String fcstStr, Calendar validTime)
+    public static DataTime getDataTimeFcst(String fcstStr, Calendar validTime)
 			throws OgcException {
 		int fcst = parseForcast(fcstStr);
 		long refMillis = validTime.getTimeInMillis() - (fcst * 1000);
@@ -395,7 +398,7 @@ public class ForecastTimeUtil {
 	 * @return
 	 * @throws WmsException
 	 */
-	protected int parseForcast(String fcstStr) throws OgcException {
+    public static int parseForcast(String fcstStr) throws OgcException {
 		// TODO handle all ISO standard durations
 		Matcher m = fcstPattern.matcher(fcstStr);
 		if (m.matches()) {
@@ -428,7 +431,7 @@ public class ForecastTimeUtil {
 	 * @return
 	 * @throws WmsException
 	 */
-	protected DataTime getDataTime(String refStr, String fcstStr,
+    public static DataTime getDataTime(String refStr, String fcstStr,
 			Calendar validTime) throws OgcException {
 		Calendar ref = parseTimeStr(refStr, refKey);
 		int fcst = parseForcast(fcstStr);
@@ -452,7 +455,7 @@ public class ForecastTimeUtil {
 	 * @return
 	 * @throws WmsException
 	 */
-    protected Calendar getValidTime(
+    public static Calendar getValidTime(
             SimpleLayer<? extends SimpleDimension> layer, String time)
             throws OgcException {
 		Calendar rval;

@@ -49,9 +49,6 @@ public class ServletOgcResponse implements IOgcHttpResponse {
         this.response = response;
     }
 
-    /* (non-Javadoc)
-     * @see com.raytheon.uf.edex.ogc.common.output.OgcHttpResponse#getOutputStream()
-     */
     @Override
     public OutputStream getOutputStream() throws IOException {
         if (out == null) {
@@ -63,25 +60,16 @@ public class ServletOgcResponse implements IOgcHttpResponse {
         return out;
     }
 
-    /* (non-Javadoc)
-     * @see com.raytheon.uf.edex.ogc.common.output.OgcHttpResponse#setStatus(int)
-     */
     @Override
     public void setStatus(int status) {
         response.setStatus(status);
     }
 
-    /* (non-Javadoc)
-     * @see com.raytheon.uf.edex.ogc.common.output.OgcHttpResponse#setContentType(java.lang.String)
-     */
     @Override
     public void setContentType(String type) {
         response.setContentType(type);
     }
 
-    /* (non-Javadoc)
-     * @see com.raytheon.uf.edex.ogc.common.output.OgcHttpResponse#setCharacterEncoding(java.lang.String)
-     */
     @Override
     public void setCharacterEncoding(String encoding) {
         response.setCharacterEncoding(encoding);

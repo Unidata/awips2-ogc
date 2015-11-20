@@ -44,7 +44,8 @@ import com.raytheon.uf.edex.ogc.common.db.SimpleLayer;
 
 public class MetarDimension extends SimpleDimension {
 
-  
+    private static final long serialVersionUID = -3378017808232496288L;
+
     /**
      * {@inheritDoc}
      */

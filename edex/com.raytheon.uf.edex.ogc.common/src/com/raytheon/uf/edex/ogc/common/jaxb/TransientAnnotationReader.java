@@ -110,13 +110,6 @@ public class TransientAnnotationReader extends
         transientMethods.add(m);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.sun.xml.bind.v2.model.annotation.AnnotationReader#getAllFieldAnnotations
-     * (java.lang.Object, com.sun.xml.bind.v2.model.annotation.Locatable)
-     */
     @Override
     public Annotation[] getAllFieldAnnotations(Field f, Locatable srcPos) {
         if (transientFields.contains(f)) {
@@ -125,13 +118,6 @@ public class TransientAnnotationReader extends
         return delegate.getAllFieldAnnotations(f, srcPos);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.sun.xml.bind.v2.model.annotation.AnnotationReader#getAllMethodAnnotations
-     * (java.lang.Object, com.sun.xml.bind.v2.model.annotation.Locatable)
-     */
     @Override
     public Annotation[] getAllMethodAnnotations(Method m, Locatable srcPos) {
         if (transientMethods.contains(m)) {
@@ -140,14 +126,6 @@ public class TransientAnnotationReader extends
         return delegate.getAllMethodAnnotations(m, srcPos);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.sun.xml.bind.v2.model.annotation.AnnotationReader#getClassAnnotation
-     * (java.lang.Class, java.lang.Object,
-     * com.sun.xml.bind.v2.model.annotation.Locatable)
-     */
     @SuppressWarnings("unchecked")
     @Override
     public <A extends Annotation> A getClassAnnotation(Class<A> type, Class c,
@@ -158,38 +136,16 @@ public class TransientAnnotationReader extends
         return delegate.getClassAnnotation(type, c, srcPos);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.sun.xml.bind.v2.model.annotation.AnnotationReader#getClassArrayValue
-     * (java.lang.annotation.Annotation, java.lang.String)
-     */
     @Override
     public Type[] getClassArrayValue(Annotation a, String name) {
         return delegate.getClassArrayValue(a, name);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.sun.xml.bind.v2.model.annotation.AnnotationReader#getClassValue(java
-     * .lang.annotation.Annotation, java.lang.String)
-     */
     @Override
     public Type getClassValue(Annotation a, String name) {
         return delegate.getClassValue(a, name);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.sun.xml.bind.v2.model.annotation.AnnotationReader#getFieldAnnotation
-     * (java.lang.Class, java.lang.Object,
-     * com.sun.xml.bind.v2.model.annotation.Locatable)
-     */
     @SuppressWarnings("unchecked")
     @Override
     public <A extends Annotation> A getFieldAnnotation(Class<A> type, Field f,
@@ -201,14 +157,6 @@ public class TransientAnnotationReader extends
         return delegate.getFieldAnnotation(type, f, srcPos);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.sun.xml.bind.v2.model.annotation.AnnotationReader#getMethodAnnotation
-     * (java.lang.Class, java.lang.Object,
-     * com.sun.xml.bind.v2.model.annotation.Locatable)
-     */
     @SuppressWarnings("unchecked")
     @Override
     public <A extends Annotation> A getMethodAnnotation(Class<A> type,
@@ -220,40 +168,18 @@ public class TransientAnnotationReader extends
         return delegate.getMethodAnnotation(type, m, srcPos);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.sun.xml.bind.v2.model.annotation.AnnotationReader#
-     * getMethodParameterAnnotation(java.lang.Class, java.lang.Object, int,
-     * com.sun.xml.bind.v2.model.annotation.Locatable)
-     */
     @Override
     public <A extends Annotation> A getMethodParameterAnnotation(Class<A> type,
             Method m, int index, Locatable srcPos) {
         return delegate.getMethodParameterAnnotation(type, m, index, srcPos);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.sun.xml.bind.v2.model.annotation.AnnotationReader#getPackageAnnotation
-     * (java.lang.Class, java.lang.Object,
-     * com.sun.xml.bind.v2.model.annotation.Locatable)
-     */
     @Override
     public <A extends Annotation> A getPackageAnnotation(Class<A> type,
             Class c, Locatable srcPos) {
         return delegate.getPackageAnnotation(type, c, srcPos);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.sun.xml.bind.v2.model.annotation.AnnotationReader#hasClassAnnotation
-     * (java.lang.Object, java.lang.Class)
-     */
     @Override
     public boolean hasClassAnnotation(Class c, Class<? extends Annotation> type) {
         if (transientClasses.contains(c)) {
@@ -262,13 +188,6 @@ public class TransientAnnotationReader extends
         return delegate.hasClassAnnotation(c, type);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.sun.xml.bind.v2.model.annotation.AnnotationReader#hasFieldAnnotation
-     * (java.lang.Class, java.lang.Object)
-     */
     @Override
     public boolean hasFieldAnnotation(Class<? extends Annotation> type, Field f) {
         if (XmlTransient.class.isAssignableFrom(type)
@@ -278,13 +197,6 @@ public class TransientAnnotationReader extends
         return delegate.hasFieldAnnotation(type, f);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.sun.xml.bind.v2.model.annotation.AnnotationReader#hasMethodAnnotation
-     * (java.lang.Class, java.lang.Object)
-     */
     @Override
     public boolean hasMethodAnnotation(Class<? extends Annotation> type,
             Method m) {
@@ -295,13 +207,6 @@ public class TransientAnnotationReader extends
         return delegate.hasMethodAnnotation(type, m);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.sun.xml.bind.v2.model.annotation.AbstractInlineAnnotationReaderImpl
-     * #fullName(java.lang.Object)
-     */
     @Override
     protected String fullName(Method m) {
         return m.getDeclaringClass().getName() + '#' + m.getName();

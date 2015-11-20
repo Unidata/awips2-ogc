@@ -53,13 +53,6 @@ public class MetarLayerCollector
         super(MetarLayer.class, MetarRecord.class, METAR_LAYER_NAME, store);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.ogc.common.db.SingleLayerCollector#getTime(com.raytheon
-     * .uf.common.dataplugin.PluginDataObject)
-     */
     @Override
     protected Calendar getTime(MetarRecord record) {
         return record.getTimeObs();

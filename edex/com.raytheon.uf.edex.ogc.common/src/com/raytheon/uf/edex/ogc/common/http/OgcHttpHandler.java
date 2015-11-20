@@ -17,9 +17,6 @@
  * See the AWIPS II Master Rights File ("Master Rights File.pdf") for
  * further licensing information.
  **/
-/**
- * 
- */
 package com.raytheon.uf.edex.ogc.common.http;
 
 import java.io.IOException;
@@ -30,13 +27,15 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.ws.rs.core.Response.Status;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.jetty.http.HttpStatus;
 
 import com.raytheon.uf.common.http.AcceptHeaderParser;
 import com.raytheon.uf.common.http.AcceptHeaderValue;
@@ -50,7 +49,11 @@ import com.raytheon.uf.edex.ogc.common.OgcResponse.TYPE;
 import com.raytheon.uf.edex.ogc.common.output.IOgcHttpResponse;
 import com.raytheon.uf.edex.ogc.common.output.OgcResponseOutput;
 import com.raytheon.uf.edex.ogc.common.output.ServletOgcResponse;
-
+import com.raytheon.uf.edex.ogc.common.stats.IStatsRecorder;
+import com.raytheon.uf.edex.ogc.common.stats.OperationType;
+import com.raytheon.uf.edex.ogc.common.stats.ServiceType;
+import com.raytheon.uf.edex.ogc.common.stats.StatsRecorderFinder;
+import com.raytheon.uf.edex.soap.RequestLogController;
 
 /**
  * Abstract base for HTTP handlers. Provides common utility methods.
@@ -83,9 +86,73 @@ public abstract class OgcHttpHandler {
 
     public static final String ACCEPT_ENC_HEADER = "accept-encoding";
 
-    public abstract void handle(OgcHttpRequest request);
+    protected static final IUFStatusHandler log = UFStatus
+            .getHandler(OgcHttpHandler.class);
 
-    private IUFStatusHandler log = UFStatus.getHandler(this.getClass());
+    public void handle(OgcHttpRequest request) {
+        try {
+            long startNano = System.nanoTime();
+            handleInternal(request);
+            long durationNano = System.nanoTime() - startNano;
+            /*
+             * TODO get service from request somehow?? remove time and duration
+             * calculation from critical path
+             */
+            IStatsRecorder statRecorder = StatsRecorderFinder.find();
+            statRecorder.recordRequest(System.currentTimeMillis(),
+                    durationNano, ServiceType.OGC, OperationType.QUERY, true);
+            /*
+             * TODO this is part of the incoming request log, the rest is
+             * usually in CXF which is not hooked up here. Fill in cxf portion
+             * of request logging.
+             */
+            if (RequestLogController.getInstance().shouldLogRequestsInfo()
+                    && log.isPriorityEnabled(RequestLogController.getInstance()
+                            .getRequestLogLevel())) {
+                String requestLog = "";
+                requestLog += "Successfully processed request from "
+                        + request.getRequest().getRemoteAddr() + ".  ";
+                double seconds = durationNano / 1000000000.0;
+                requestLog += "Duration of " + seconds + "s.";
+                log.handle(RequestLogController.getInstance()
+                        .getRequestLogLevel(), requestLog);
+            }
+        } catch (Exception e) {
+            log.error("Unable to handle request", e);
+        }
+    }
+
+    protected abstract void handleInternal(OgcHttpRequest request)
+            throws Exception;
+
+    /**
+     * Handle an HTTP GET operation
+     * 
+     * @param request
+     * @param response
+     * @param headers
+     */
+    public void handleGet(HttpServletRequest request,
+            HttpServletResponse response, Map<String, Object> headers) {
+        OgcHttpRequest ogcReq = new OgcHttpRequest(request, response, headers);
+        handle(ogcReq);
+    }
+
+    /**
+     * Handle an HTTP POST operation
+     * 
+     * @param request
+     * @param response
+     * @param headers
+     * @param body
+     */
+    public void handlePost(HttpServletRequest request,
+            HttpServletResponse response, Map<String, Object> headers,
+            InputStream body) {
+        OgcHttpRequest ogcReq = new OgcHttpRequest(request, response, headers);
+        ogcReq.setInputStream(body);
+        handle(ogcReq);
+    }
 
     public static MimeType getMimeType(Map<String, Object> map, String key)
             throws OgcException {
@@ -229,6 +296,7 @@ public abstract class OgcHttpHandler {
         try {
             rval = Integer.parseInt(str);
         } catch (Exception e) {
+            log.error("Unable to parse string as integer: " + str);
             // leave rval as null
         }
         return rval;
@@ -254,6 +322,7 @@ public abstract class OgcHttpHandler {
         try {
             rval = Boolean.parseBoolean(str);
         } catch (Exception e) {
+            log.error("Unable to parse string as boolean: " + str);
             // leave rval as null
         }
         return rval;
@@ -351,7 +420,7 @@ public abstract class OgcHttpHandler {
         Writer writer = null;
         try {
             writer = new OutputStreamWriter(response.getOutputStream());
-            writer.write(Status.fromStatusCode(errorCode).toString());
+            writer.write(HttpStatus.getMessage(errorCode));
         } finally {
             if (writer != null) {
                 writer.flush();
@@ -359,4 +428,5 @@ public abstract class OgcHttpHandler {
             }
         }
     }
+
 }

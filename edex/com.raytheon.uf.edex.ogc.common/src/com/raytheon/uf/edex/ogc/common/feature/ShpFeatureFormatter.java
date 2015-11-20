@@ -79,13 +79,6 @@ public class ShpFeatureFormatter implements SimpleFeatureFormatter {
 
 	protected byte[] buffer = new byte[1024 * 4];
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.ogc.common.feature.SimpleFeatureFormatter#format
-     * (java.util.List, java.io.OutputStream)
-     */
     @Override
     public void format(List<List<SimpleFeature>> features, OutputStream out)
             throws Exception {
@@ -105,13 +98,6 @@ public class ShpFeatureFormatter implements SimpleFeatureFormatter {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.ogc.common.feature.SimpleFeatureFormatter#format
-     * (java.util.List)
-     */
 	@Override
 	public OgcResponse format(List<List<SimpleFeature>> features)
 			throws Exception {
@@ -262,21 +248,11 @@ public class ShpFeatureFormatter implements SimpleFeatureFormatter {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.raytheon.uf.edex.ogc.common.feature.SimpleFeatureFormatter#getMimeType()
-	 */
 	@Override
     public MimeType getMimeType() {
 		return mimeType;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.raytheon.uf.edex.ogc.common.feature.SimpleFeatureFormatter#matchesFormat
-	 * (java.lang.String)
-	 */
 	@Override
     public boolean matchesFormat(MimeType format) {
         if (mimeType.equalsIgnoreParams(format)) {

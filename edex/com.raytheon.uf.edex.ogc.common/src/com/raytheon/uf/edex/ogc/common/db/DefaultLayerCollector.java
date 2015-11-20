@@ -75,9 +75,9 @@ public abstract class DefaultLayerCollector<D extends SimpleDimension, L extends
         super(layerClass, recordClass, store);
     }
 
-    public void add(R... pdos) {
-        if (pdos != null && pdos.length > 0) {
-            addAll(Arrays.asList(pdos));
+    public void add(R pdo) {
+        if (pdo != null) {
+            addAll(Arrays.asList(pdo));
         }
     }
 
@@ -163,11 +163,6 @@ public abstract class DefaultLayerCollector<D extends SimpleDimension, L extends
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.raytheon.uf.edex.ogc.common.db.LayerCache#getLayers()
-     */
     @Override
     public List<L> getLayers() throws OgcException {
         List<L> rval;
@@ -201,12 +196,6 @@ public abstract class DefaultLayerCollector<D extends SimpleDimension, L extends
         write.unlock();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.ogc.common.db.LayerCache#getLayer(java.lang.String)
-     */
     @Override
     public L getLayer(String name) throws OgcException {
         if (layerMap == null) {

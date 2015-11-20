@@ -32,11 +32,6 @@ public abstract class AbstractOgcSource {
 
 	private final Map<Class<?>, Object> extensionMap = new ConcurrentHashMap<Class<?>, Object>();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.raytheon.uf.edex.wfs.reg.WfsSource#getExtension(java.lang.Class)
-	 */
 	@SuppressWarnings("unchecked")
 	public <E> E getExtension(Class<E> c) {
 		E rval = (E) extensionMap.get(c);

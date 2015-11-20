@@ -61,13 +61,6 @@ public class LogicFilter extends AbstractPdoFilter {
         return new LogicFilter(LogicOp.NOT, filter);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.ogc.common.filter.AbstractFilterOp#matches(com.raytheon
-     * .uf.common.dataplugin.PluginDataObject)
-     */
     @Override
     public boolean matches(PluginDataObject pdo) {
         switch (op) {
@@ -113,11 +106,6 @@ public class LogicFilter extends AbstractPdoFilter {
         return op;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         if (op.equals(LogicOp.NOT)) {
@@ -138,11 +126,6 @@ public class LogicFilter extends AbstractPdoFilter {
         return builder.toString();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -152,11 +135,6 @@ public class LogicFilter extends AbstractPdoFilter {
         return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

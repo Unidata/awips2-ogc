@@ -30,8 +30,8 @@ import org.opengis.feature.simple.SimpleFeatureType;
 
 import com.raytheon.uf.common.http.MimeType;
 import com.raytheon.uf.common.json.geo.IGeoJsonService;
-import com.raytheon.uf.common.json.geo.SimpleGeoJsonService;
 import com.raytheon.uf.common.json.geo.MixedFeatureCollection;
+import com.raytheon.uf.common.json.geo.SimpleGeoJsonService;
 import com.raytheon.uf.edex.ogc.common.OgcResponse;
 import com.raytheon.uf.edex.ogc.common.OgcResponse.TYPE;
 
@@ -58,13 +58,6 @@ public class JsonFeatureFormatter implements SimpleFeatureFormatter {
 
     protected IGeoJsonService jsonUtil = new SimpleGeoJsonService();
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.ogc.common.feature.SimpleFeatureFormatter#format
-     * (java.util.List, java.io.OutputStream)
-     */
     @Override
     public void format(List<List<SimpleFeature>> features, OutputStream out)
             throws Exception {
@@ -72,13 +65,6 @@ public class JsonFeatureFormatter implements SimpleFeatureFormatter {
         jsonUtil.serialize(mixed, out);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.wms.format.SimpleFeatureFormatter#format(java.util
-     * .List)
-     */
     @Override
     public OgcResponse format(List<List<SimpleFeature>> features)
             throws Exception {
@@ -102,23 +88,11 @@ public class JsonFeatureFormatter implements SimpleFeatureFormatter {
         return new MixedFeatureCollection(colls);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.raytheon.uf.edex.wms.format.SimpleFeatureFormatter#getMimeType()
-     */
     @Override
     public MimeType getMimeType() {
         return mimeType;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.ogc.common.feature.SimpleFeatureFormatter#matchesFormat
-     * (java.lang.String)
-     */
     @Override
     public boolean matchesFormat(MimeType format) {
         return mimeType.equalsIgnoreParams(format);

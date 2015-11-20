@@ -17,9 +17,6 @@
  * See the AWIPS II Master Rights File ("Master Rights File.pdf") for
  * further licensing information.
  **/
-/**
- * 
- */
 package com.raytheon.uf.edex.ogc.common;
 
 import java.util.LinkedList;
