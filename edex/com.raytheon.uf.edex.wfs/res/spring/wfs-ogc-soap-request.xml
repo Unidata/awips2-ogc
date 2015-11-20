@@ -12,7 +12,7 @@
         class="com.raytheon.uf.edex.soap.JaxWsConfigServerFactoryBean"
         init-method="create">
         <property name="serviceClass" value="com.raytheon.uf.edex.wfs.soap2_0_0.Wfs" />
-        <property name="address" value="http://0.0.0.0:8086/wfs2.0.0" />
+        <property name="address" value="http://0.0.0.0:${edex.ogc.soap.port}/wfs2.0.0" />
         <property name="serviceBean" ref="wfsSoapServiceImpl" />
         <property name="annotationReader">
             <bean

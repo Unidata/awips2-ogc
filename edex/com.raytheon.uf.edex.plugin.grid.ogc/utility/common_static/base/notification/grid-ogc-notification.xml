@@ -1,0 +1,12 @@
+<pluginNotificationList>
+    <pluginNotification>
+        <endpointName>gridOgc</endpointName>
+        <format>PDO</format>
+        <endpointType>VM</endpointType>
+        <metadataMap>
+            <mapping key="pluginName">
+                <constraint constraintValue="grid" constraintType="EQUALS"/>
+            </mapping>
+        </metadataMap>
+    </pluginNotification>
+</pluginNotificationList>

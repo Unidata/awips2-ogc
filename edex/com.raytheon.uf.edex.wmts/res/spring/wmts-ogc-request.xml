@@ -1,0 +1,47 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:amq="http://activemq.apache.org/schema/core"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+  http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <bean id="wmtsTileRegistry" class="com.raytheon.uf.edex.wmts.tiling.TileMatrixRegistry" />
+
+    <bean id="wmtsTileCache" class="com.raytheon.uf.edex.wmts.cache.MemoryTileCache" />
+
+    <bean id="wmtsSourceManager" class="com.raytheon.uf.edex.wmts.provider.WmtsSourceManager" />
+
+    <bean id="wmtsprovider" class="com.raytheon.uf.edex.wmts.provider.OgcWmtsProvider">
+        <constructor-arg ref="wmtsTileRegistry" />
+        <constructor-arg ref="wmtsTileCache" />
+        <constructor-arg ref="wmtsSourceManager" />
+    </bean>
+
+    <bean id="wmtsHandler" class="com.raytheon.uf.edex.wmts.WmtsHttpHandler">
+        <constructor-arg ref="wmtsprovider" />
+    </bean>
+
+    <camelContext id="wmts-camel" xmlns="http://camel.apache.org/schema/spring" errorHandlerRef="errorHandler">
+
+        <propertyPlaceholder id="ogcProperties" location="classpath:edex-ogc.properties" />
+
+        <restConfiguration component="jetty" host="0.0.0.0" port="{{edex.ogc.port}}">
+            <endpointProperty key="disableStreamCache" value="{{edex.ogc.disableStreamCache}}" />
+            <endpointProperty key="chunked" value="{{edex.ogc.chunked}}" />
+            <endpointProperty key="matchOnUriPrefix" value="{{edex.ogc.matchOnUriPrefix}}" />
+            <endpointProperty key="maxThreads" value="{{edex.ogc.maxThreads}}" />
+            <endpointProperty key="minThreads" value="{{edex.ogc.minThreads}}" />
+        </restConfiguration>
+
+        <rest path="/wmts">
+            <get uri="/">
+                <to
+                    uri="bean:wmtsHandler?method=handleGet(${in.header.CamelHttpServletRequest}, ${in.header.CamelHttpServletResponse}, ${headers})" />
+            </get>
+            <post uri="/">
+                <to
+                    uri="bean:wmtsHandler?method=handlePost(${in.header.CamelHttpServletRequest}, ${in.header.CamelHttpServletResponse}, ${headers}, ${body})" />
+            </post>
+        </rest>
+
+    </camelContext>
+
+</beans>

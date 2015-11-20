@@ -29,4 +29,16 @@
          id="com.raytheon.edex.feature.uframe"
          version="0.0.0"/>
 
+   <includes
+         id="com.raytheon.uf.edex.ogc.wmts.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.raytheon.uf.edex.ogc.wcs.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.raytheon.uf.edex.ogc.wms.feature"
+         version="0.0.0"/>
+
 </feature>

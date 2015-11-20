@@ -63,6 +63,7 @@ import com.raytheon.uf.edex.ogc.common.spatial.VerticalCoordinate.Reference;
  * ------------ ---------- ----------- --------------------------
  * Feb 17, 2012            bclement     Initial creation
  * Nov 19, 2015 5087       bclement     reformatted and added DefinedCrsAuthority lookup
+ * Nov 23, 2015 5087       bclement     safety check if DefinedCrsAuthority isn't provided
  * 
  * </pre>
  * 
@@ -200,7 +201,10 @@ public class CrsLookup {
             rval = (CoordinateReferenceSystem) cache.get(normalized);
             if (rval == null) {
                 /* don't cache from defined crs auth, it handles its own */
-                rval = getDefinedCrsAuthority().lookup(crs);
+                IDefinedCrsAuthority authority = getDefinedCrsAuthority();
+                if (authority != null) {
+                    rval = authority.lookup(crs);
+                }
                 if (rval == null) {
                     rval = decodeCrs(normalized);
                     if (rval != null) {
@@ -212,6 +216,9 @@ public class CrsLookup {
         return rval;
     }
 
+    /**
+     * @return null if no authority is found
+     */
     protected static IDefinedCrsAuthority getDefinedCrsAuthority() {
         IDefinedCrsAuthority rval = null;
         ApplicationContext context = EDEXUtil.getSpringContext();
@@ -233,7 +240,12 @@ public class CrsLookup {
          */
         try {
             URL url = new URL(urlString);
-            return getDefinedCrsAuthority().resolve(url);
+            IDefinedCrsAuthority authority = getDefinedCrsAuthority();
+            if (authority == null) {
+                throw new OgcException(Code.InvalidCRS,
+                        "Unable to retrieve external CRS: " + urlString);
+            }
+            return authority.resolve(url);
         } catch (MalformedURLException | URISyntaxException e) {
             throw new OgcException(Code.InvalidParameterValue,
                     "Invalid external CRS URL: " + urlString, e);

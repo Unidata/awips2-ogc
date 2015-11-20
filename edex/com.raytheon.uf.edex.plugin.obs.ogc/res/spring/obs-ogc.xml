@@ -23,4 +23,9 @@
         <constructor-arg ref="metarLayerCollector" />
     </bean>
 
+    <bean id="metarWmsSource" class="com.raytheon.uf.edex.plugin.obs.ogc.wms.MetarWmsSource">
+        <constructor-arg ref="obsProperties" />
+        <constructor-arg ref="metarLayerTransformer" />
+    </bean>
+
 </beans>

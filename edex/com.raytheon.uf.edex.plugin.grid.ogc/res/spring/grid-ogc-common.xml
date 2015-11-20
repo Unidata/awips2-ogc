@@ -1,0 +1,40 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:amq="http://activemq.apache.org/schema/core"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+    <bean id="gridLayerCollector" class="com.raytheon.uf.edex.plugin.grid.ogc.GridLayerCollector">
+        <constructor-arg ref="layerStore" />
+    </bean>
+
+    <bean id="gridWcsLayerTransformer" class="com.raytheon.uf.edex.ogc.common.db.LayerTransformer">
+        <constructor-arg value="grid" />
+        <constructor-arg ref="gribLayerCollector" />
+    </bean>
+
+    <bean id="gridWmsLayerCache" class="com.raytheon.uf.edex.plugin.grid.ogc.GridWmsLayerCache">
+        <constructor-arg ref="gribLayerCollector" />
+    </bean>
+
+    <bean id="gridWmsLayerTransformer" class="com.raytheon.uf.edex.ogc.common.db.LayerTransformer">
+        <constructor-arg value="grid" />
+        <constructor-arg ref="gridWmsLayerCache" />
+    </bean>
+
+    <bean id="gridWmsSource" class="com.raytheon.uf.edex.plugin.grid.ogc.GridWmsSource">
+        <constructor-arg ref="gridProperties" />
+        <constructor-arg ref="gridWmsLayerTransformer" />
+    </bean>
+
+    <bean id="gridWcsSource" class="com.raytheon.uf.edex.plugin.grid.ogc.GridWcsSource">
+        <constructor-arg ref="gridProperties" />
+        <constructor-arg ref="gridWcsLayerTransformer" />
+        <constructor-arg ref="gridLayerCollector" />
+    </bean>
+
+    <bean id="gridNativeCrsAuth" class="com.raytheon.uf.edex.plugin.grid.ogc.GridNativeCrsAuthority" />
+
+    <bean id="gridVerticalEnabler" class="com.raytheon.uf.edex.plugin.grid.ogc.GridVerticalEnabler" />
+
+    <bean id="gridFieldAdapter" class="com.raytheon.uf.edex.plugin.grid.ogc.GridFieldAdapter" />
+
+</beans>

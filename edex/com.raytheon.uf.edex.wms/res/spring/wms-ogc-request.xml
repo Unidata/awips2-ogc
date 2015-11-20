@@ -1,0 +1,86 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+      
+  http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <bean id="gmlFeatureFormatter" class="com.raytheon.uf.edex.wms.format.GmlFeatureFormatter" />
+
+    <bean id="htmlFeatureFormatter" class="com.raytheon.uf.edex.wms.format.HtmlFeatureFormatter" />
+
+    <bean id="jaxbManager" class="com.raytheon.uf.edex.ogc.common.jaxb.OgcJaxbManager">
+        <constructor-arg>
+            <list>
+                <value type="java.lang.Class">net.opengis.wms.v_1_3_0.ObjectFactory</value>
+                <value type="java.lang.Class">net.opengis.sld.v_1_1_0.ObjectFactory</value>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="sldReg" class="com.raytheon.uf.edex.wms.sld.SldParserRegistryImpl" />
+
+    <bean factory-bean="sldReg" factory-method="register">
+        <constructor-arg>
+            <list>
+                <bean class="com.raytheon.uf.edex.wms.sld.SldParser100" />
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="gmTranslator" class="com.raytheon.uf.edex.wms.provider.OgcGetMapTranslator">
+        <constructor-arg ref="sldReg" />
+    </bean>
+
+    <bean id="wmsHandler" class="com.raytheon.uf.edex.wms.WmsHttpHandler">
+        <constructor-arg ref="jaxbManager" />
+        <constructor-arg ref="gmTranslator" />
+    </bean>
+	
+	<!-- gives styleManager a subClassLocator instance, to silence errors -->
+
+    <bean id="styleManagerInstance" class="com.raytheon.uf.common.style.StyleManager" factory-method="getInstance">
+    </bean>
+
+    <bean id="locator" class="com.raytheon.uf.edex.wms.styling.WmsSubClassLocator">
+    </bean>
+
+    <bean id="setSubClass" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject">
+            <ref bean="styleManagerInstance" />
+        </property>
+        <property name="targetMethod">
+            <value>setSubClassLocator</value>
+        </property>
+        <property name="arguments">
+            <list>
+                <ref bean="locator" />
+            </list>
+        </property>
+    </bean>
+
+    <camelContext id="wms-camel" xmlns="http://camel.apache.org/schema/spring" errorHandlerRef="errorHandler">
+
+        <propertyPlaceholder id="ogcProperties" location="classpath:edex-ogc.properties" />
+
+        <restConfiguration component="jetty" host="0.0.0.0" port="{{edex.ogc.port}}">
+            <endpointProperty key="disableStreamCache" value="{{edex.ogc.disableStreamCache}}" />
+            <endpointProperty key="chunked" value="{{edex.ogc.chunked}}" />
+            <endpointProperty key="matchOnUriPrefix" value="{{edex.ogc.matchOnUriPrefix}}" />
+            <endpointProperty key="maxThreads" value="{{edex.ogc.maxThreads}}" />
+            <endpointProperty key="minThreads" value="{{edex.ogc.minThreads}}" />
+        </restConfiguration>
+
+        <rest path="/wms">
+            <get uri="/">
+                <to
+                    uri="bean:wmsHandler?method=handleGet(${in.header.CamelHttpServletRequest}, ${in.header.CamelHttpServletResponse}, ${headers})" />
+            </get>
+            <post uri="/">
+                <to
+                    uri="bean:wmsHandler?method=handlePost(${in.header.CamelHttpServletRequest}, ${in.header.CamelHttpServletResponse}, ${headers}, ${body})" />
+            </post>
+        </rest>
+
+    </camelContext>
+
+
+</beans>
