@@ -24,7 +24,7 @@ Require-Bundle: net.opengis;bundle-version="1.0.2",
  com.raytheon.uf.common.dataplugin.level;bundle-version="1.12.1174",
  com.raytheon.uf.edex.log;bundle-version="1.12.1174",
  com.raytheon.uf.common.http,
- com.raytheon.uf.edex.soap;bundle-version="1.14.0"
+ com.raytheon.uf.edex.soap
 Export-Package: com.raytheon.uf.edex.ogc.common,
  com.raytheon.uf.edex.ogc.common.db,
  com.raytheon.uf.edex.ogc.common.feature,
