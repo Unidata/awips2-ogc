@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="iso19139-v_20070417-2.2.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="csw-v_2_0_2-schema-1.0.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="gml-v_3_1_1-schema-1.1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="wcs-v_1_1_2-schema-1.1.0.jar"/>
