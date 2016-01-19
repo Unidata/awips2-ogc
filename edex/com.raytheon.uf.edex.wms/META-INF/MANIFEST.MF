@@ -7,7 +7,6 @@ Bundle-Vendor: RAYTHEON
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: com.raytheon.edex.common;bundle-version="1.12.1174",
  net.opengis;bundle-version="1.0.2",
- org.codehaus.jackson;bundle-version="1.7.3",
  org.geotools;bundle-version="2.6.4",
  org.apache.commons.lang;bundle-version="2.3.0",
  com.raytheon.uf.edex.ogc.common;bundle-version="1.0.0",
