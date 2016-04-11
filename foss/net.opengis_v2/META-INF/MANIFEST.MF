@@ -8,8 +8,10 @@ Bundle-ClassPath: gmlcov-v_1_0-2.2.0.jar,
  sensorML-v_2_0-2.1.0.jar,
  sweCommon-v_2_0-2.2.0.jar,
  xlink-v_1_0-1.0.0.jar,
+ ows-v_2_0-2.0.0.jar,
  .
 Export-Package: net.opengis.gmlcov.v_1_0,
+ net.opengis.ows.v_2_0,
  net.opengis.sensorml.v_2_0,
  net.opengis.swecommon.v_2_0,
  org.hisrc.w3c.xlink.v_1_0
