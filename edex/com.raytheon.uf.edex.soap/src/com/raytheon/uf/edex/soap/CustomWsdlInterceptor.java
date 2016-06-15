@@ -42,11 +42,11 @@ import com.raytheon.uf.common.status.UFStatus;
  * Jan 28, 2013            bclement     Initial creation
  * 5/2/2014     #3192      bhillip      Minor fix for CXF upgrade to 2.7.10
  * May 23, 2014 3199       bclement     moved to edex.soap from edex.ogc.common
+ * Jun 15, 2016 5534       njensen      Update for FOSS changes
  * 
  * </pre>
  * 
  * @author bclement
- * @version 1.0
  */
 public class CustomWsdlInterceptor extends AbstractPhaseInterceptor<Message> {
 
@@ -92,7 +92,7 @@ public class CustomWsdlInterceptor extends AbstractPhaseInterceptor<Message> {
                 try {
 
                     Conduit c = msg.getExchange().getDestination()
-                            .getBackChannel(msg, null, null);
+                            .getBackChannel(msg);
 
                     Message mout = new MessageImpl();
                     mout.setExchange(msg.getExchange());
