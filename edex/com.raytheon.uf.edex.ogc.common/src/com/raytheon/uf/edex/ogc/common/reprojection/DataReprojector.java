@@ -1,19 +1,19 @@
 /**
  * This software was developed and / or modified by Raytheon Company,
  * pursuant to Contract DG133W-05-CQ-1067 with the US Government.
- * 
+ *
  * U.S. EXPORT CONTROLLED TECHNICAL DATA
  * This software product contains export-restricted data whose
  * export/transfer/disclosure is restricted by U.S. law. Dissemination
  * to non-U.S. persons whether in the United States or abroad requires
  * an export license or other authorization.
- * 
+ *
  * Contractor Name:        Raytheon Company
  * Contractor Address:     6825 Pine Street, Suite 340
  *                         Mail Stop B8
  *                         Omaha, NE 68106
  *                         402.291.0100
- * 
+ *
  * See the AWIPS II Master Rights File ("Master Rights File.pdf") for
  * further licensing information.
  **/
@@ -35,7 +35,6 @@ import org.geotools.coverage.grid.GridCoordinates2D;
 import org.geotools.coverage.grid.GridCoverage2D;
 import org.geotools.coverage.grid.GridEnvelope2D;
 import org.geotools.coverage.grid.GridGeometry2D;
-import org.geotools.coverage.grid.ViewType;
 import org.geotools.geometry.DirectPosition2D;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
@@ -69,26 +68,28 @@ import com.vividsolutions.jts.geom.Envelope;
 
 /**
  * Retrieves data from the datastore in requested projection.
- * 
+ *
  * <pre>
- * 
+ *
  * SOFTWARE HISTORY
- * 
- * Date         Ticket#    Engineer    Description
- * ------------ ---------- ----------- --------------------------
- * Nov 2010                bclement     Initial creation
- * Nov 13, 2015 5087       bclement     Changed public methods to take GridGeometry instead of spatial object
- *                                       cache using soft references instead of in the datastore
- * 
+ *
+ * Date          Ticket#  Engineer  Description
+ * ------------- -------- --------- --------------------------------------------
+ * Nov 2010               bclement  Initial creation
+ * Nov 13, 2015  5087     bclement  Changed public methods to take GridGeometry
+ *                                  instead of spatial object cache using soft
+ *                                  references instead of in the datastore
+ * Aug 30, 2016  5867     randerso  Updated for GeoTools 15.1
+ *
  * </pre>
- * 
+ *
  * @author bclement
  * @version 1.0
  */
 public class DataReprojector {
 
-    private static final int CACHE_SIZE = Integer.getInteger(
-            "ogc.reprojector.cache.size", 512);
+    private static final int CACHE_SIZE = Integer
+            .getInteger("ogc.reprojector.cache.size", 512);
 
     protected IDataStore dataStore;
 
@@ -141,7 +142,8 @@ public class DataReprojector {
                 Coordinate coord = coords[i];
                 GridCoordinates2D point = getGridPoint(targetGeom, coord);
                 // coordinate was out of bounds, bail
-                if (point.x < 0 || point.x > nx || point.y < 0 || point.y > ny) {
+                if ((point.x < 0) || (point.x > nx) || (point.y < 0)
+                        || (point.y > ny)) {
                     return null;
                 }
                 // need to repackage point due to pypies not knowing about
@@ -175,7 +177,7 @@ public class DataReprojector {
     protected IDataRecord getDataRecordWithReproject(String group,
             String reprojectedDataset, GridGeometry2D geom,
             CoordinateReferenceSystem crs, Request req)
-            throws ReprojectionException {
+                    throws ReprojectionException {
         String cacheKey = group + reprojectedDataset;
         IDataRecord dataRecord = null;
         try {
@@ -198,7 +200,7 @@ public class DataReprojector {
 
     /**
      * Get cached data record for key.
-     * 
+     *
      * @param key
      * @return null if none found
      */
@@ -225,7 +227,7 @@ public class DataReprojector {
      */
     protected IDataRecord reprojectLocked(String group, String cacheKey,
             GridGeometry2D geom, CoordinateReferenceSystem crs)
-            throws ReprojectionException {
+                    throws ReprojectionException {
         KeyLock<String> lock = null;
         IDataRecord dataRecord;
         try {
@@ -237,8 +239,8 @@ public class DataReprojector {
             if (dataRecord == null) {
                 // still not there, reproject
                 dataRecord = reproject(geom, group, crs);
-                REFERENCE_CACHE.put(cacheKey, new SoftReference<IDataRecord>(
-                        dataRecord));
+                REFERENCE_CACHE.put(cacheKey,
+                        new SoftReference<IDataRecord>(dataRecord));
             }
             return dataRecord;
         } finally {
@@ -300,7 +302,7 @@ public class DataReprojector {
      */
     public GridCoverage2D getReprojectedCoverage(String group,
             GridGeometry2D geom, ReferencedEnvelope targetEnv)
-            throws ReprojectionException {
+                    throws ReprojectionException {
         ReferencedDataRecord rep = getReprojected(group, geom, targetEnv);
         if (rep == null) {
             return null;
@@ -308,8 +310,8 @@ public class DataReprojector {
         ReferencedEnvelope re = rep.getEnvelope();
         IDataRecord record = rep.getRecord();
         try {
-            return getTypeProjector(record)
-                    .getGridCoverage(rep.getRecord(), re);
+            return getTypeProjector(record).getGridCoverage(rep.getRecord(),
+                    re);
         } catch (UnknownDataRecordType e) {
             throw new ReprojectionException(
                     "Problem getting grid coverage for group " + group, e);
@@ -328,7 +330,7 @@ public class DataReprojector {
      */
     public ReferencedDataRecord getReprojected(String group,
             GridGeometry2D geom, ReferencedEnvelope targetEnvelope)
-            throws ReprojectionException {
+                    throws ReprojectionException {
         RequestWrapper req;
         try {
             req = getRequest(geom, targetEnvelope);
@@ -366,14 +368,14 @@ public class DataReprojector {
 
     /**
      * Get a projector that is compatible with record
-     * 
+     *
      * @param record
      * @return
      * @throws UnknownDataRecordType
      */
     protected AbstractDataReprojector<? extends IDataRecord> getTypeProjector(
             IDataRecord record) throws UnknownDataRecordType {
-        if (_typeProjector == null || !_typeProjector.compatible(record)) {
+        if ((_typeProjector == null) || !_typeProjector.compatible(record)) {
             if (record instanceof ByteDataRecord) {
                 _typeProjector = new ByteDataReprojector();
             } else if (record instanceof FloatDataRecord) {
@@ -393,7 +395,7 @@ public class DataReprojector {
 
     /**
      * Gets the entire coverage from the store and reprojects it.
-     * 
+     *
      * @param spatial
      *            spatial object tied to requested dataset
      * @param group
@@ -408,7 +410,8 @@ public class DataReprojector {
         try {
             IDataRecord original = getDataRecord(group, dataSet, Request.ALL);
             ReferencedEnvelope env = new ReferencedEnvelope(geom.getEnvelope());
-            AbstractDataReprojector<? extends IDataRecord> typeProjector = getTypeProjector(original);
+            AbstractDataReprojector<? extends IDataRecord> typeProjector = getTypeProjector(
+                    original);
             GridCoverage2D cov = typeProjector.getGridCoverage(original, env);
             GridCoverage2D reprojected = DataReprojectorMapUtil
                     .lenientReprojectCoverage(cov, targetCRS);
@@ -420,13 +423,12 @@ public class DataReprojector {
                  * with float data. If it happens with other data we can change
                  * this.
                  */
-                GridCoverage2D maskCov = typeProjector.getMaskCoverage(
-                        original, env);
+                GridCoverage2D maskCov = typeProjector.getMaskCoverage(original,
+                        env);
                 Interpolation interp = Interpolation
                         .getInstance(Interpolation.INTERP_NEAREST);
                 GridCoverage2D reprojectedMask = (GridCoverage2D) DataReprojectorMapUtil.LENIENT_OPERATIONS
-                        .resample(maskCov.view(ViewType.GEOPHYSICS), targetCRS,
-                                null, interp);
+                        .resample(maskCov, targetCRS, null, interp);
                 reprojectedRecord = typeProjector.extractData(reprojected,
                         reprojectedMask);
             } else {
@@ -445,7 +447,7 @@ public class DataReprojector {
 
     /**
      * Get the native grid geometry for the given spatial object.
-     * 
+     *
      * @param spatial
      *            the spatial object to get the grid geometry for.
      * @return the grid geometry or null if something went wrong.
@@ -485,8 +487,8 @@ public class DataReprojector {
         case XLINE:
         case YLINE:
         default:
-            throw new ReprojectionException("Data reprojector " + req.getType()
-                    + " not implemented");
+            throw new ReprojectionException(
+                    "Data reprojector " + req.getType() + " not implemented");
         }
         return rval;
     }
@@ -500,18 +502,18 @@ public class DataReprojector {
      *            length of y axis
      * @return
      */
-    public static GridGeometry2D getGridGeometry(ReferencedEnvelope env,
-            int nx, int ny) {
+    public static GridGeometry2D getGridGeometry(ReferencedEnvelope env, int nx,
+            int ny) {
         // TODO cache
         GridGeometry2D mapGeom = null;
-        mapGeom = new GridGeometry2D(new GeneralGridEnvelope(
-                new int[] { 0, 0 }, new int[] { nx, ny }, false), env);
+        mapGeom = new GridGeometry2D(new GeneralGridEnvelope(new int[] { 0, 0 },
+                new int[] { nx, ny }, false), env);
         return mapGeom;
     }
 
     /**
      * Build up slice request for reprojected dataset
-     * 
+     *
      * @param geom
      * @param targetEnvelope
      *            bbox in crs
@@ -522,8 +524,8 @@ public class DataReprojector {
      */
     public static RequestWrapper getRequest(GridGeometry2D geom,
             ReferencedEnvelope targetEnvelope)
-            throws MismatchedDimensionException, TransformException,
-            FactoryException {
+                    throws MismatchedDimensionException, TransformException,
+                    FactoryException {
         RequestWrapper rval = null;
         CoordinateReferenceSystem targetCrs = targetEnvelope
                 .getCoordinateReferenceSystem();
@@ -567,8 +569,8 @@ public class DataReprojector {
      * @throws TransformException
      */
     protected static RequestWrapper getSubSlice(GridGeometry2D geom,
-            Envelope env, int[] dims) throws MismatchedDimensionException,
-            TransformException {
+            Envelope env, int[] dims)
+                    throws MismatchedDimensionException, TransformException {
         RequestWrapper rval = new RequestWrapper();
         MathTransform2D crsToGrid2D = geom
                 .getCRSToGrid2D(PixelOrientation.UPPER_LEFT);
@@ -592,10 +594,9 @@ public class DataReprojector {
      * @throws MismatchedDimensionException
      * @throws TransformException
      */
-    protected static ReferencedEnvelope transformGrid(
-            MathTransform2D gridToCrs, int[][] minmax,
-            CoordinateReferenceSystem crs) throws MismatchedDimensionException,
-            TransformException {
+    protected static ReferencedEnvelope transformGrid(MathTransform2D gridToCrs,
+            int[][] minmax, CoordinateReferenceSystem crs)
+                    throws MismatchedDimensionException, TransformException {
         int[] min = minmax[0];
         int[] max = minmax[1];
         DirectPosition lower = new DirectPosition2D(min[0], min[1]);
@@ -612,7 +613,7 @@ public class DataReprojector {
 
     /**
      * transforms crs coordinates to grid indexes using given math transform
-     * 
+     *
      * @param crsToGrid
      * @param env
      * @param dims
@@ -622,8 +623,8 @@ public class DataReprojector {
      * @throws TransformException
      */
     protected static int[][] transformEnv(MathTransform2D crsToGrid,
-            Envelope env, int[] dims) throws MismatchedDimensionException,
-            TransformException {
+            Envelope env, int[] dims)
+                    throws MismatchedDimensionException, TransformException {
         DirectPosition lower = new DirectPosition2D(env.getMinX(),
                 env.getMinY());
         DirectPosition upper = new DirectPosition2D(env.getMaxX(),
@@ -655,14 +656,14 @@ public class DataReprojector {
 
     /**
      * construct the dataset name based on the name of the crs.
-     * 
+     *
      * @param crs
      * @return
      */
     protected String buildDatasetName(CoordinateReferenceSystem crs) {
         Set<ReferenceIdentifier> ids = crs.getIdentifiers();
         String code;
-        if (ids == null || ids.isEmpty()) {
+        if ((ids == null) || ids.isEmpty()) {
             code = crs.getName().toString();
         } else {
             Iterator<ReferenceIdentifier> i = ids.iterator();

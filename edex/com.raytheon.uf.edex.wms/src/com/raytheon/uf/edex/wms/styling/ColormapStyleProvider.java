@@ -1,19 +1,19 @@
 /**
  * This software was developed and / or modified by Raytheon Company,
  * pursuant to Contract DG133W-05-CQ-1067 with the US Government.
- * 
+ *
  * U.S. EXPORT CONTROLLED TECHNICAL DATA
  * This software product contains export-restricted data whose
  * export/transfer/disclosure is restricted by U.S. law. Dissemination
  * to non-U.S. persons whether in the United States or abroad requires
  * an export license or other authorization.
- * 
+ *
  * Contractor Name:        Raytheon Company
  * Contractor Address:     6825 Pine Street, Suite 340
  *                         Mail Stop B8
  *                         Omaha, NE 68106
  *                         402.291.0100
- * 
+ *
  * See the AWIPS II Master Rights File ("Master Rights File.pdf") for
  * further licensing information.
  **/
@@ -71,16 +71,17 @@ import com.raytheon.uf.edex.wms.util.LegendUtility;
 
 /**
  * Abstract class for styling data using an AWIPS II colormap
- * 
+ *
  * <pre>
  * SOFTWARE HISTORY
- * 
- * Date         Ticket#    Engineer    Description
- * ------------ ---------- ----------- --------------------------
- * Nov 28, 2012            bclement     Initial creation
- * 
+ *
+ * Date          Ticket#  Engineer  Description
+ * ------------- -------- --------- --------------------------
+ * Nov 28, 2012           bclement  Initial creation
+ * Aug 30, 2016  5867     randerso  Updated for GeoTools 15.1
+ *
  * </pre>
- * 
+ *
  * @author bclement
  * @version 1.0
  */
@@ -118,14 +119,13 @@ public abstract class ColormapStyleProvider<R extends PluginDataObject>
         this.callback = callback;
         StyleBuilder sb = new StyleBuilder();
         RasterSymbolizer symbolizer = sb.createRasterSymbolizer();
-        symbolizer.setOpacity(new FilterFactoryImpl()
-                .createLiteralExpression(1.0));
+        symbolizer.setOpacity(new FilterFactoryImpl().literal(1.0));
         preRendered = sb.createStyle(symbolizer);
     }
 
     /**
      * Create colormap parameters for data record
-     * 
+     *
      * @param record
      * @return
      * @throws StyleException
@@ -146,7 +146,7 @@ public abstract class ColormapStyleProvider<R extends PluginDataObject>
 
     /**
      * Create colormap parameters for data record
-     * 
+     *
      * @param record
      * @param rawData
      * @return
@@ -188,7 +188,7 @@ public abstract class ColormapStyleProvider<R extends PluginDataObject>
 
     /**
      * Hook to modify cmap parameters
-     * 
+     *
      * @param record
      * @param params
      * @return
@@ -206,8 +206,8 @@ public abstract class ColormapStyleProvider<R extends PluginDataObject>
     protected Object getRawData(R record) throws WmsException {
         Object data;
         try {
-            PluginDao dao = PluginFactory.getInstance().getPluginDao(
-                    record.getPluginName());
+            PluginDao dao = PluginFactory.getInstance()
+                    .getPluginDao(record.getPluginName());
             IDataRecord[] res = dao.getHDF5Data(record, 0);
             IDataRecord datarecord = res[0];
             data = datarecord.getDataObject();
@@ -233,8 +233,8 @@ public abstract class ColormapStyleProvider<R extends PluginDataObject>
     private String lookupInternal(R sample) throws WmsException {
         ParamLevelMatchCriteria criteria = getCriteria(sample);
         try {
-            StyleRule sr = StyleManager.getInstance().getStyleRule(
-                    StyleManager.StyleType.IMAGERY, criteria);
+            StyleRule sr = StyleManager.getInstance()
+                    .getStyleRule(StyleManager.StyleType.IMAGERY, criteria);
             if (sr == null) {
                 return getFallbackDefaultColormapName();
             }
@@ -253,7 +253,7 @@ public abstract class ColormapStyleProvider<R extends PluginDataObject>
     @Override
     public WmsImage styleData(IWmsDataRetriever retriever,
             WmsStyleChoice styleChoice, R record, GridGeometry2D geom)
-            throws WmsException {
+                    throws WmsException {
         WmsImage rval;
         ReferencedEnvelope env = new ReferencedEnvelope(geom.getEnvelope2D(),
                 geom.getCoordinateReferenceSystem());
@@ -277,7 +277,7 @@ public abstract class ColormapStyleProvider<R extends PluginDataObject>
 
     /**
      * Color a ReferencedDataRecord with the given ColorMapParameters
-     * 
+     *
      * @param data
      * @param record
      * @param cmapParams
@@ -291,14 +291,14 @@ public abstract class ColormapStyleProvider<R extends PluginDataObject>
             rval = new WmsImage((GridCoverage2D) null);
         } else {
             try {
-                ColorMapData cmapData = ColorMapUtility.buildColorMapData(data
-                        .getRecord());
-                RenderedImage image = Colormapper
-                        .colorMap(cmapData, cmapParams);
+                ColorMapData cmapData = ColorMapUtility
+                        .buildColorMapData(data.getRecord());
+                RenderedImage image = Colormapper.colorMap(cmapData,
+                        cmapParams);
                 GeneralEnvelope ge = new GeneralEnvelope(2);
                 ReferencedEnvelope re = data.getEnvelope();
-                ge.setCoordinateReferenceSystem(re
-                        .getCoordinateReferenceSystem());
+                ge.setCoordinateReferenceSystem(
+                        re.getCoordinateReferenceSystem());
                 ge.setRange(0, re.getMinX(), re.getMaxX());
                 ge.setRange(1, re.getMinY(), re.getMaxY());
                 GridCoverage2D gc = convert(image, ge);
@@ -314,12 +314,13 @@ public abstract class ColormapStyleProvider<R extends PluginDataObject>
 
     public WmsImage justStyleRecord(ReferencedDataRecord dataRecord,
             R pluginRecord) throws WmsException {
-        ColorMapParameters cmapParams = getCmapParams(pluginRecord, dataRecord
-                .getRecord().getDataObject());
+        ColorMapParameters cmapParams = getCmapParams(pluginRecord,
+                dataRecord.getRecord().getDataObject());
         return styleData(dataRecord, cmapParams);
     }
 
-    protected GridCoverage2D convert(RenderedImage img, GeneralEnvelope bounds) {
+    protected GridCoverage2D convert(RenderedImage img,
+            GeneralEnvelope bounds) {
         GridCoverageFactory fact = new GridCoverageFactory();
         return fact.create("", img, bounds);
     }
@@ -329,11 +330,11 @@ public abstract class ColormapStyleProvider<R extends PluginDataObject>
             throws WmsException {
         ColorMapParameters params = getCmapParams(record);
         IColorMap cmap;
-        if (style != null && !style.isEmpty()) {
+        if ((style != null) && !style.isEmpty()) {
             cmap = getJustColormap(style);
             if (cmap == null) {
-                throw new WmsException(Code.StyleNotDefined, "Unknown style: "
-                        + style);
+                throw new WmsException(Code.StyleNotDefined,
+                        "Unknown style: " + style);
             }
             params.setColorMapName(style);
             params.setColorMap(cmap);
@@ -358,7 +359,7 @@ public abstract class ColormapStyleProvider<R extends PluginDataObject>
 
     /**
      * the fallback default style, when all else fails
-     * 
+     *
      * @return
      */
     protected String getFallbackDefaultColormapName() {
@@ -383,7 +384,7 @@ public abstract class ColormapStyleProvider<R extends PluginDataObject>
     @Override
     public BufferedImage getLegend(String layer, R record, String style,
             Integer width, Integer height) throws WmsException {
-        if (width == null || height == null) {
+        if ((width == null) || (height == null)) {
             width = defaultWidth;
             height = defaultHeight;
         }
@@ -413,7 +414,7 @@ public abstract class ColormapStyleProvider<R extends PluginDataObject>
 
     /**
      * Draw the legend background
-     * 
+     *
      * @param cmap
      * @param params
      * @param labels
@@ -468,6 +469,7 @@ public abstract class ColormapStyleProvider<R extends PluginDataObject>
      * @param loader
      *            the loader to set
      */
+    @Override
     public void setLoader(ClassLoader loader) {
         this.loader = loader;
     }
