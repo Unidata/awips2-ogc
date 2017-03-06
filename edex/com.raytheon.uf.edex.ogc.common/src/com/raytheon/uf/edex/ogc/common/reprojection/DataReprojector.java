@@ -21,14 +21,13 @@ package com.raytheon.uf.edex.ogc.common.reprojection;
 
 import java.awt.Point;
 import java.io.FileNotFoundException;
-import java.lang.ref.SoftReference;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import javax.media.jai.Interpolation;
 
-import org.apache.camel.com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
+import org.apache.camel.com.github.benmanes.caffeine.cache.Cache;
+import org.apache.camel.com.github.benmanes.caffeine.cache.Caffeine;
 import org.apache.commons.lang.ArrayUtils;
 import org.geotools.coverage.grid.GeneralGridEnvelope;
 import org.geotools.coverage.grid.GridCoordinates2D;
@@ -80,11 +79,11 @@ import com.vividsolutions.jts.geom.Envelope;
  *                                  instead of spatial object cache using soft
  *                                  references instead of in the datastore
  * Aug 30, 2016  5867     randerso  Updated for GeoTools 15.1
+ * Mar 06, 2017  6165     nabowle   Update cache for Camel 2.18.2
  *
  * </pre>
  *
  * @author bclement
- * @version 1.0
  */
 public class DataReprojector {
 
@@ -104,8 +103,8 @@ public class DataReprojector {
 
     protected static final KeyLocker<String> locker = new KeyLocker<String>();
 
-    private static final Map<String, SoftReference<IDataRecord>> REFERENCE_CACHE = new ConcurrentLinkedHashMap.Builder<String, SoftReference<IDataRecord>>()
-            .maximumWeightedCapacity(CACHE_SIZE).build();
+    private static final Cache<String, IDataRecord> REFERENCE_CACHE = Caffeine
+            .newBuilder().maximumSize(CACHE_SIZE).softValues().build();
 
     public DataReprojector(IDataStore dataStore) {
         this.dataStore = dataStore;
@@ -177,7 +176,7 @@ public class DataReprojector {
     protected IDataRecord getDataRecordWithReproject(String group,
             String reprojectedDataset, GridGeometry2D geom,
             CoordinateReferenceSystem crs, Request req)
-                    throws ReprojectionException {
+            throws ReprojectionException {
         String cacheKey = group + reprojectedDataset;
         IDataRecord dataRecord = null;
         try {
@@ -185,7 +184,7 @@ public class DataReprojector {
                     geom.getCoordinateReferenceSystem())) {
                 dataRecord = getDataRecord(group, dataSet, req);
             } else {
-                IDataRecord fullRecord = getCached(cacheKey);
+                IDataRecord fullRecord = REFERENCE_CACHE.getIfPresent(cacheKey);
                 if (fullRecord == null) {
                     fullRecord = reprojectLocked(group, cacheKey, geom, crs);
                 }
@@ -196,21 +195,6 @@ public class DataReprojector {
                     "Problem reprojecting data for group " + group, e);
         }
         return dataRecord;
-    }
-
-    /**
-     * Get cached data record for key.
-     *
-     * @param key
-     * @return null if none found
-     */
-    protected IDataRecord getCached(String key) {
-        SoftReference<IDataRecord> ref = REFERENCE_CACHE.get(key);
-        IDataRecord rval = null;
-        if (ref != null) {
-            rval = ref.get();
-        }
-        return rval;
     }
 
     /**
@@ -227,20 +211,20 @@ public class DataReprojector {
      */
     protected IDataRecord reprojectLocked(String group, String cacheKey,
             GridGeometry2D geom, CoordinateReferenceSystem crs)
-                    throws ReprojectionException {
+            throws ReprojectionException {
         KeyLock<String> lock = null;
         IDataRecord dataRecord;
         try {
             // get reproject lock
             lock = locker.getLock(cacheKey);
             lock.lock();
-            dataRecord = getCached(cacheKey);
+            dataRecord = REFERENCE_CACHE.getIfPresent(cacheKey);
+
             // recheck that dataset still doesn't exist
             if (dataRecord == null) {
                 // still not there, reproject
                 dataRecord = reproject(geom, group, crs);
-                REFERENCE_CACHE.put(cacheKey,
-                        new SoftReference<IDataRecord>(dataRecord));
+                REFERENCE_CACHE.put(cacheKey, dataRecord);
             }
             return dataRecord;
         } finally {
@@ -302,7 +286,7 @@ public class DataReprojector {
      */
     public GridCoverage2D getReprojectedCoverage(String group,
             GridGeometry2D geom, ReferencedEnvelope targetEnv)
-                    throws ReprojectionException {
+            throws ReprojectionException {
         ReferencedDataRecord rep = getReprojected(group, geom, targetEnv);
         if (rep == null) {
             return null;
@@ -330,7 +314,7 @@ public class DataReprojector {
      */
     public ReferencedDataRecord getReprojected(String group,
             GridGeometry2D geom, ReferencedEnvelope targetEnvelope)
-                    throws ReprojectionException {
+            throws ReprojectionException {
         RequestWrapper req;
         try {
             req = getRequest(geom, targetEnvelope);
@@ -524,8 +508,8 @@ public class DataReprojector {
      */
     public static RequestWrapper getRequest(GridGeometry2D geom,
             ReferencedEnvelope targetEnvelope)
-                    throws MismatchedDimensionException, TransformException,
-                    FactoryException {
+            throws MismatchedDimensionException, TransformException,
+            FactoryException {
         RequestWrapper rval = null;
         CoordinateReferenceSystem targetCrs = targetEnvelope
                 .getCoordinateReferenceSystem();
@@ -570,7 +554,7 @@ public class DataReprojector {
      */
     protected static RequestWrapper getSubSlice(GridGeometry2D geom,
             Envelope env, int[] dims)
-                    throws MismatchedDimensionException, TransformException {
+            throws MismatchedDimensionException, TransformException {
         RequestWrapper rval = new RequestWrapper();
         MathTransform2D crsToGrid2D = geom
                 .getCRSToGrid2D(PixelOrientation.UPPER_LEFT);
@@ -596,7 +580,7 @@ public class DataReprojector {
      */
     protected static ReferencedEnvelope transformGrid(MathTransform2D gridToCrs,
             int[][] minmax, CoordinateReferenceSystem crs)
-                    throws MismatchedDimensionException, TransformException {
+            throws MismatchedDimensionException, TransformException {
         int[] min = minmax[0];
         int[] max = minmax[1];
         DirectPosition lower = new DirectPosition2D(min[0], min[1]);
@@ -624,7 +608,7 @@ public class DataReprojector {
      */
     protected static int[][] transformEnv(MathTransform2D crsToGrid,
             Envelope env, int[] dims)
-                    throws MismatchedDimensionException, TransformException {
+            throws MismatchedDimensionException, TransformException {
         DirectPosition lower = new DirectPosition2D(env.getMinX(),
                 env.getMinY());
         DirectPosition upper = new DirectPosition2D(env.getMaxX(),
