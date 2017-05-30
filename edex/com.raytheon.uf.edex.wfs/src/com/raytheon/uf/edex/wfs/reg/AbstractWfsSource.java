@@ -1,29 +1,29 @@
 /**
  * This software was developed and / or modified by Raytheon Company,
  * pursuant to Contract DG133W-05-CQ-1067 with the US Government.
- * 
+ *
  * U.S. EXPORT CONTROLLED TECHNICAL DATA
  * This software product contains export-restricted data whose
  * export/transfer/disclosure is restricted by U.S. law. Dissemination
  * to non-U.S. persons whether in the United States or abroad requires
  * an export license or other authorization.
- * 
+ *
  * Contractor Name:        Raytheon Company
  * Contractor Address:     6825 Pine Street, Suite 340
  *                         Mail Stop B8
  *                         Omaha, NE 68106
  *                         402.291.0100
- * 
+ *
  * See the AWIPS II Master Rights File ("Master Rights File.pdf") for
  * further licensing information.
  **/
 package com.raytheon.uf.edex.wfs.reg;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -47,24 +47,24 @@ import com.raytheon.uf.edex.wfs.request.SortBy;
 
 /**
  * Abstract base class for WFS sources
- * 
+ *
  * <pre>
- * 
+ *
  * SOFTWARE HISTORY
- * 
- * Date         Ticket#    Engineer    Description
- * ------------ ---------- ----------- --------------------------
- * May 9, 2012            bclement     Initial creation
- * 10/16/2014   3454       bphillip    Upgrading to Hibernate 4
- * 
+ *
+ * Date          Ticket#  Engineer  Description
+ * ------------- -------- --------- -------------------------
+ * May 09, 2012           bclement  Initial creation
+ * Oct 16, 2014  3454     bphillip  Upgrading to Hibernate 4
+ * May 30, 2017  6186     rjpeter   Made getResource static.
+ *
  * </pre>
- * 
+ *
  * @author bclement
- * @version 1.0
  * @param <T>
  */
-public abstract class AbstractWfsSource<T> extends AbstractOgcSource implements
-        IWfsSource {
+public abstract class AbstractWfsSource<T> extends AbstractOgcSource
+        implements IWfsSource {
 
     protected final String key;
 
@@ -90,11 +90,6 @@ public abstract class AbstractWfsSource<T> extends AbstractOgcSource implements
         this.key = key;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.raytheon.uf.edex.wfs.reg.WfsSource#listFeatureTypes()
-     */
     @Override
     public List<WfsFeatureType> listFeatureTypes() {
         List<WfsFeatureType> featureTypes = getFeatureTypes();
@@ -106,50 +101,41 @@ public abstract class AbstractWfsSource<T> extends AbstractOgcSource implements
 
     protected abstract List<WfsFeatureType> getFeatureTypes();
 
+    @Override
     public List<WfsFeatureType> getAliases() {
-        //Default to no aliases unless the source specifies
-        return new ArrayList<WfsFeatureType>();
+        // Default to no aliases unless the source specifies
+        return new ArrayList<>();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.wfs.reg.WfsSource#describeFeatureType(com.raytheon
-     * .uf.edex.wfs.request.QualifiedName)
-     */
     @Override
     public abstract String describeFeatureType(QualifiedName feature)
             throws WfsException;
 
     /**
      * Utility method for reading text files from the classpath
-     * 
+     *
      * @param loader
      * @param location
      * @return
      * @throws IOException
      */
-    protected String getResource(ClassLoader loader, String location)
+    protected static String getResource(ClassLoader loader, String location)
             throws IOException {
         String rval;
-        InputStream in = null;
-        try {
-            in = loader.getResourceAsStream(location);
-            rval = new java.util.Scanner(in).useDelimiter("\\A").next();
+
+        try (Scanner scanner = new Scanner(
+                loader.getResourceAsStream(location))) {
+            rval = scanner.useDelimiter("\\A").next();
         } catch (Throwable e) {
             throw new IOException(e);
-        } finally {
-            if (in != null) {
-                in.close();
-            }
         }
+
         return rval;
     }
 
     /**
      * Interacts with database to get features
-     * 
+     *
      * @param feature
      * @param query
      * @return
@@ -185,34 +171,19 @@ public abstract class AbstractWfsSource<T> extends AbstractOgcSource implements
         return rval;
     }
 
-    @SuppressWarnings("unchecked")
     protected List<T> getResults(Criteria criteria) {
         return criteria.list();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.wfs.reg.WfsSource#getFeatureSpatialField(com.raytheon
-     * .uf.edex.wfs.request.QualifiedName)
-     */
     @Override
     public abstract String getFeatureSpatialField(QualifiedName feature);
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.wfs.reg.WfsSource#getFeatureEntity(com.raytheon.
-     * uf.edex.wfs.request.QualifiedName)
-     */
     @Override
     public abstract Class<?> getFeatureEntity(QualifiedName feature);
 
     /**
      * Hook for implementing classes to modify the query object
-     * 
+     *
      * @param wfsq
      * @return
      */
@@ -222,7 +193,7 @@ public abstract class AbstractWfsSource<T> extends AbstractOgcSource implements
 
     /**
      * Adds temporal criterion
-     * 
+     *
      * @param crit
      * @param query
      * @return
@@ -277,13 +248,6 @@ public abstract class AbstractWfsSource<T> extends AbstractOgcSource implements
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.wfs.reg.WfsSource#distinct(com.raytheon.uf.edex.
-     * wfs.request.QualifiedName, com.raytheon.uf.edex.db.api.DatabaseQuery)
-     */
     @Override
     public List<String> distinct(QualifiedName feature, WfsQuery query) {
         query = modQuery(query);
@@ -300,19 +264,11 @@ public abstract class AbstractWfsSource<T> extends AbstractOgcSource implements
             rval = null;
         } catch (Exception e) {
             statusHandler.error("Problem querying for record", e);
-            rval = new ArrayList<String>(0);
+            rval = new ArrayList<>(0);
         }
         return rval;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.raytheon.uf.edex.wfs.reg.WfsSource#count(com.raytheon.uf.edex.wfs
-     * .request.QualifiedName, com.raytheon.uf.edex.db.api.DatabaseQuery)
-     */
-    @SuppressWarnings("unchecked")
     @Override
     public long count(QualifiedName feature, WfsQuery query)
             throws WfsException {
@@ -343,29 +299,14 @@ public abstract class AbstractWfsSource<T> extends AbstractOgcSource implements
         return rval;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.raytheon.uf.edex.wfs.reg.WfsSource#getKey()
-     */
     @Override
     public String getKey() {
         return key;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.raytheon.uf.edex.wfs.reg.WfsSource#getJaxbClasses()
-     */
     @Override
     public abstract Class<?>[] getJaxbClasses();
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.raytheon.uf.edex.wfs.reg.WfsSource#getFieldMap()
-     */
     @Override
     public Map<String, String> getFieldMap() {
         return null;
