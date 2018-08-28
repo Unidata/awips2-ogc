@@ -17,6 +17,13 @@
       [Enter License Description here.]
    </license>
 
+    <plugin
+         id="com.raytheon.uf.common.nc4"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
    <plugin
          id="com.raytheon.uf.edex.ogc.common"
          download-size="0"
