@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Gis
 Bundle-SymbolicName: net.opengis_v2
 Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: gmlcov-v_1_0-2.2.0.jar,
  sensorML-v_2_0-2.1.0.jar,
  sweCommon-v_2_0-2.2.0.jar,

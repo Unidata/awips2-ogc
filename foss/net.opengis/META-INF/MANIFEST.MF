@@ -83,4 +83,4 @@ Export-Package: com.eurocontrol.avwx.v_1_1_1,
  org.w3.smil.v_2_0.language,
  org.w3c.ws_addressing,
  us.gov.ic.ism.v_2_0
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

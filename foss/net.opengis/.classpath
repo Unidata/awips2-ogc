@@ -30,7 +30,7 @@
 	<classpathentry exported="true" kind="lib" path="wfs-v_1_1_0-schema-1.0.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="wms-v_1_3_0-schema-1.0.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="wmts-v_1_0_0-schema-1.0.3.1.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
