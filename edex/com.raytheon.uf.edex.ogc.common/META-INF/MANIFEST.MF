@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Common
 Bundle-SymbolicName: com.raytheon.uf.edex.ogc.common
-Bundle-Version: 1.0.3.qualifier
+Bundle-Version: 1.19.0.qualifier
 Bundle-Vendor: RAYTHEON
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: net.opengis;bundle-version="1.0.2",
  org.geotools;bundle-version="2.6.4",
  org.apache.commons.lang;bundle-version="2.3.0",
@@ -23,7 +23,8 @@ Require-Bundle: net.opengis;bundle-version="1.0.2",
  com.raytheon.uf.common.dataplugin.level;bundle-version="1.12.1174",
  com.raytheon.uf.edex.log;bundle-version="1.12.1174",
  com.raytheon.uf.common.http,
- com.raytheon.uf.edex.soap
+ com.raytheon.uf.edex.soap,
+ javax.xml.bind
 Export-Package: com.raytheon.uf.edex.ogc.common,
  com.raytheon.uf.edex.ogc.common.db,
  com.raytheon.uf.edex.ogc.common.feature,

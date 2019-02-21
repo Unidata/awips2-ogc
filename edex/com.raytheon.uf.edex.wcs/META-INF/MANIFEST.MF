@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Wcs
 Bundle-SymbolicName: com.raytheon.uf.edex.wcs
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.19.0.qualifier
 Bundle-Vendor: RAYTHEON
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: com.raytheon.uf.edex.ogc.common;bundle-version="1.0.0",
  net.opengis;bundle-version="1.0.2",
  org.geotools;bundle-version="2.6.4",
@@ -25,7 +25,8 @@ Require-Bundle: com.raytheon.uf.edex.ogc.common;bundle-version="1.0.0",
  com.raytheon.uf.common.http,
  javax.servlet,
  com.raytheon.uf.edex.soap,
- com.raytheon.uf.common.units;bundle-version="1.14.0"
+ com.raytheon.uf.common.units;bundle-version="1.14.0",
+ javax.xml.bind
 Export-Package: com.raytheon.uf.edex.wcs,
  com.raytheon.uf.edex.wcs.format,
  com.raytheon.uf.edex.wcs.provider,

@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: EDEX Soap
 Bundle-SymbolicName: com.raytheon.uf.edex.soap
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.19.0.qualifier
 Bundle-Vendor: RAYTHEON
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.apache.commons.cxf;bundle-version="3.1.14",
  com.raytheon.uf.common.status,
- com.sun.xml.bind
+ javax.xml.bind
 Export-Package: com.raytheon.uf.edex.soap

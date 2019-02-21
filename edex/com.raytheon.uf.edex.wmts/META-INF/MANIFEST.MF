@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Wmts
 Bundle-SymbolicName: com.raytheon.uf.edex.wmts
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.19.0.qualifier
 Bundle-Vendor: RAYTHEON
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: net.opengis;bundle-version="1.0.2",
  com.raytheon.uf.edex.ogc.common;bundle-version="1.0.0",
  javax.servlet;bundle-version="2.5.0",
@@ -18,7 +18,8 @@ Require-Bundle: net.opengis;bundle-version="1.0.2",
  com.raytheon.uf.edex.core;bundle-version="1.12.1174",
  com.raytheon.edex.common;bundle-version="1.12.1174",
  com.raytheon.uf.common.status;bundle-version="1.12.1174",
- org.apache.commons.collections;bundle-version="3.2.0"
+ org.apache.commons.collections;bundle-version="3.2.0",
+ javax.xml.bind
 Import-Package: com.raytheon.uf.common.http,
  com.sun.xml.bind.marshaller
 Export-Package: com.raytheon.uf.edex.wmts,
