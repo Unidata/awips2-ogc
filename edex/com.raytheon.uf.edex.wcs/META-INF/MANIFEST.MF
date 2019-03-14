@@ -26,7 +26,8 @@ Require-Bundle: com.raytheon.uf.edex.ogc.common;bundle-version="1.0.0",
  javax.servlet,
  com.raytheon.uf.edex.soap,
  com.raytheon.uf.common.units;bundle-version="1.14.0",
- javax.xml.bind
+ javax.xml.bind,
+ javax.xml.ws
 Export-Package: com.raytheon.uf.edex.wcs,
  com.raytheon.uf.edex.wcs.format,
  com.raytheon.uf.edex.wcs.provider,
