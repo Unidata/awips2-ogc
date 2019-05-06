@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.geotools.legend.Glyph;
+import org.geotools.map.legend.Glyph;
 import org.geotools.styling.Description;
 import org.geotools.styling.FeatureTypeStyle;
 import org.geotools.styling.RasterSymbolizer;

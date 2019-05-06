@@ -36,7 +36,7 @@ import org.geotools.geometry.jts.ReferencedEnvelope;
 import com.raytheon.uf.common.dataplugin.PluginDataObject;
 import com.raytheon.uf.common.geospatial.MapUtil;
 import com.raytheon.uf.edex.ogc.common.OgcException;
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
 
 
 /**

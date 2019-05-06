@@ -31,7 +31,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import net.opengis.gml.v_3_1_1.DirectPositionType;
 import net.opengis.gml.v_3_1_1.PointType;
 
-import com.vividsolutions.jts.geom.Point;
+import org.locationtech.jts.geom.Point;
 
 /**
  * Utility methods for creating JAXB objects for GML

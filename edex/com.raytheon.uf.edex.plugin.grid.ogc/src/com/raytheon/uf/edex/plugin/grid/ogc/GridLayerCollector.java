@@ -12,11 +12,11 @@ package com.raytheon.uf.edex.plugin.grid.ogc;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.measure.unit.SI;
-import javax.measure.unit.Unit;
+import javax.measure.Unit;
 
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.locationtech.jts.geom.Envelope;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -37,7 +37,8 @@ import com.raytheon.uf.edex.ogc.common.db.LayerTransformer;
 import com.raytheon.uf.edex.ogc.common.db.SimpleDimension;
 import com.raytheon.uf.edex.ogc.common.level.LevelDimUtil;
 import com.raytheon.uf.edex.ogc.common.spatial.AltUtil;
-import com.vividsolutions.jts.geom.Envelope;
+
+import si.uom.SI;
 
 /**
  * Collects OGC metadata for grid records into layer objects
@@ -115,7 +116,7 @@ public class GridLayerCollector extends
             layer.setVertical(false);
         }
         try {
-            AltUtil.convert(SI.METER, unit, 1);
+            AltUtil.convert(SI.METRE, unit, 1);
         } catch (Exception e) {
             layer.setVertical(false);
         }

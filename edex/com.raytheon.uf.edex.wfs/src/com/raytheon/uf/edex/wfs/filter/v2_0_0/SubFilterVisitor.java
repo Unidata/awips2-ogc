@@ -49,8 +49,8 @@ import com.raytheon.uf.edex.ogc.common.spatial.Composite3DBoundingBox;
 import com.raytheon.uf.edex.wfs.WfsException;
 import com.raytheon.uf.edex.wfs.WfsException.Code;
 import com.raytheon.uf.edex.wfs.provider.VisitorBag;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
 
 /**
  * visitor for parsing filters into subscription filters

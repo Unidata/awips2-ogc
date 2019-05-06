@@ -9,21 +9,19 @@
  */
 package com.raytheon.uf.edex.ogc.common.spatial;
 
+import java.text.ParsePosition;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import javax.measure.unit.SI;
-import javax.measure.unit.Unit;
-
-import net.opengis.gml.v_3_1_1.EnvelopeType;
-import net.opengis.ows.v_1_1_0.BoundingBoxType;
+import javax.measure.Unit;
 
 import org.geotools.geometry.DirectPosition2D;
 import org.geotools.geometry.GeneralDirectPosition;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultCompoundCRS;
+import org.locationtech.jts.geom.Coordinate;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.crs.SingleCRS;
@@ -34,7 +32,11 @@ import com.raytheon.uf.edex.ogc.common.OgcException;
 import com.raytheon.uf.edex.ogc.common.OgcException.Code;
 import com.raytheon.uf.edex.ogc.common.gml3_1_1.EnvelopeConverter;
 import com.raytheon.uf.edex.ogc.common.spatial.VerticalCoordinate.Reference;
-import com.vividsolutions.jts.geom.Coordinate;
+
+import net.opengis.gml.v_3_1_1.EnvelopeType;
+import net.opengis.ows.v_1_1_0.BoundingBoxType;
+import si.uom.SI;
+import tec.uom.se.format.SimpleUnitFormat;
 
 /**
  * Utilities for Bounding box parsing
@@ -46,11 +48,11 @@ import com.vividsolutions.jts.geom.Coordinate;
  * Date         Ticket#    Engineer    Description
  * ------------ ---------- ----------- --------------------------
  * Apr 16, 2013            bclement     Initial creation
+ * May 8, 2019   7596      tgurney      Fixes for Geotools and Units upgrade
  * 
  * </pre>
  * 
  * @author bclement
- * @version 1.0
  */
 public class BoundingBoxUtil {
     
@@ -175,11 +177,12 @@ public class BoundingBoxUtil {
                 return separate3DEnvelope(min3d, max3d, getCrs(crsName));
             }
             horizCrs = "EPSG:4326";
-            units = SI.METER;
+            units = SI.METRE;
             ref = Reference.ABOVE_MSL;
         } else {
             horizCrs = m.group(1);
-            units = Unit.valueOf(m.group(2));
+            units = SimpleUnitFormat.getInstance()
+                    .parseProductUnit(m.group(2), new ParsePosition(0));
             if (m.group(4) != null) {
                 ref = Reference.fromAbbreviation(m.group(4).toUpperCase());
             } else {

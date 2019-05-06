@@ -22,19 +22,8 @@ package com.raytheon.uf.edex.wfs.filter.v2_0_0;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.measure.unit.Unit;
+import javax.measure.Unit;
 import javax.xml.bind.JAXBElement;
-
-import net.opengis.filter.v_2_0_0.AbstractIdType;
-import net.opengis.filter.v_2_0_0.BBOXType;
-import net.opengis.filter.v_2_0_0.BinarySpatialOpType;
-import net.opengis.filter.v_2_0_0.BinaryTemporalOpType;
-import net.opengis.filter.v_2_0_0.DistanceBufferType;
-import net.opengis.filter.v_2_0_0.PropertyIsLikeType;
-import net.opengis.filter.v_2_0_0.PropertyIsNilType;
-import net.opengis.filter.v_2_0_0.PropertyIsNullType;
-import net.opengis.filter.v_2_0_0.ResourceIdType;
-import net.opengis.gml.v_3_2_1.EnvelopeType;
 
 import org.geotools.geometry.jts.JTS;
 import org.hibernate.criterion.Conjunction;
@@ -44,6 +33,8 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.spatial.criterion.SpatialRelateExpression;
 import org.hibernate.spatial.criterion.SpatialRestrictions;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
 
 import com.raytheon.uf.common.geospatial.MapUtil;
 import com.raytheon.uf.edex.ogc.common.db.SQLParamRestriction;
@@ -60,8 +51,17 @@ import com.raytheon.uf.edex.wfs.WfsException;
 import com.raytheon.uf.edex.wfs.WfsException.Code;
 import com.raytheon.uf.edex.wfs.filter.EscapingLikeExpression;
 import com.raytheon.uf.edex.wfs.provider.VisitorBag;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
+
+import net.opengis.filter.v_2_0_0.AbstractIdType;
+import net.opengis.filter.v_2_0_0.BBOXType;
+import net.opengis.filter.v_2_0_0.BinarySpatialOpType;
+import net.opengis.filter.v_2_0_0.BinaryTemporalOpType;
+import net.opengis.filter.v_2_0_0.DistanceBufferType;
+import net.opengis.filter.v_2_0_0.PropertyIsLikeType;
+import net.opengis.filter.v_2_0_0.PropertyIsNilType;
+import net.opengis.filter.v_2_0_0.PropertyIsNullType;
+import net.opengis.filter.v_2_0_0.ResourceIdType;
+import net.opengis.gml.v_3_2_1.EnvelopeType;
 
 /**
  * Visitor for building hibernate criterion from filter

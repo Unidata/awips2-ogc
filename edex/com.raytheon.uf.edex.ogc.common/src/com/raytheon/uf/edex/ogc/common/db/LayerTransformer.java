@@ -51,7 +51,7 @@ import com.raytheon.uf.edex.ogc.common.OgcGeoBoundingBox;
 import com.raytheon.uf.edex.ogc.common.OgcLayer;
 import com.raytheon.uf.edex.ogc.common.OgcStyle;
 import com.raytheon.uf.edex.ogc.common.StyleLookup;
-import com.vividsolutions.jts.geom.Polygon;
+import org.locationtech.jts.geom.Polygon;
 
 /**
  * Converts layer objects from storage to intermediate OGC metadata layer

@@ -41,11 +41,11 @@ import com.raytheon.uf.edex.ogc.common.gml3_2_1.GeometryConverter;
 import com.raytheon.uf.edex.ogc.common.spatial.CrsLookup;
 import com.raytheon.uf.edex.ogc.common.util.ConvertService;
 import com.raytheon.uf.edex.wfs.provider.VisitorBag;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateFilter;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.CoordinateFilter;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.WKTReader;
 
 /**
  * Abstract base for filter parsing. Provides common utility methods.

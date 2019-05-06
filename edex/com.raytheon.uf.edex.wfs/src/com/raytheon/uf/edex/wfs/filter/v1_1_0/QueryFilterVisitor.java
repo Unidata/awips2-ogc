@@ -51,8 +51,8 @@ import com.raytheon.uf.edex.ogc.common.gml3_1_1.EnvelopeConverter;
 import com.raytheon.uf.edex.ogc.common.gml3_1_1.GeometryConverter;
 import com.raytheon.uf.edex.ogc.common.util.ConvertService;
 import com.raytheon.uf.edex.wfs.provider.VisitorBag;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
 
 /**
  * Parses OGC Filter to hibernate criterion

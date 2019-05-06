@@ -54,8 +54,8 @@ import com.raytheon.uf.edex.wmts.reg.WmtsLayer;
 import com.raytheon.uf.edex.wmts.reg.WmtsSource;
 import com.raytheon.uf.edex.wmts.tiling.TileMatrix;
 import com.raytheon.uf.edex.wmts.tiling.TileMatrixSet;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Envelope;
 
 /**
  * Web Map Tile Service source that is backed by a Web Map Service source
