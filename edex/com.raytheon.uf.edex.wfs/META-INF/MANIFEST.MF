@@ -26,7 +26,8 @@ Require-Bundle: org.geotools;bundle-version="2.6.4",
  org.apache.ws.commons.schema;bundle-version="2.1.0",
  javax.xml.bind,
  javax.xml.ws,
- javax.jws
+ javax.jws,
+ javax.annotation
 Export-Package: com.raytheon.uf.edex.wfs,
  com.raytheon.uf.edex.wfs.feature,
  com.raytheon.uf.edex.wfs.filter,
