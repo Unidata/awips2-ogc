@@ -24,7 +24,8 @@ Require-Bundle: net.opengis;bundle-version="1.0.2",
  com.raytheon.uf.common.http,
  com.raytheon.uf.edex.soap,
  javax.xml.bind,
- javax.xml.ws
+ javax.xml.ws,
+ javax.media.jai
 Export-Package: com.raytheon.uf.edex.ogc.common,
  com.raytheon.uf.edex.ogc.common.db,
  com.raytheon.uf.edex.ogc.common.feature,
