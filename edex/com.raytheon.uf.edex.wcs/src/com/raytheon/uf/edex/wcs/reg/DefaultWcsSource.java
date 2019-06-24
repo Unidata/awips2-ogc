@@ -39,7 +39,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import javax.measure.unit.Unit;
+import javax.measure.Unit;
 
 import org.apache.commons.collections.map.LRUMap;
 import org.geotools.coverage.grid.GeneralGridEnvelope;
@@ -56,6 +56,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
+import org.locationtech.jts.geom.Envelope;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.metadata.spatial.PixelOrientation;
@@ -109,7 +110,6 @@ import com.raytheon.uf.edex.ogc.common.spatial.VerticalCoordinate;
 import com.raytheon.uf.edex.ogc.common.urn.URNLookup;
 import com.raytheon.uf.edex.wcs.WcsException;
 import com.raytheon.uf.edex.wcs.WcsException.Code;
-import com.vividsolutions.jts.geom.Envelope;
 
 /**
  * Abstract class for sources that provide the OGC Web Coverage Service access

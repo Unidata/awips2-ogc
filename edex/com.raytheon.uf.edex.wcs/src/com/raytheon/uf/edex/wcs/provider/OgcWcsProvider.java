@@ -109,7 +109,7 @@ import com.raytheon.uf.edex.wcs.request.GetCoverageRequest;
 import com.raytheon.uf.edex.wcs.request.WcsRequest;
 import com.raytheon.uf.edex.wcs.request.WcsRequest.Type;
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
 
 /**
  * Implementation of OGC Web Coverage Service version 1.1.2

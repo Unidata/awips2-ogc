@@ -33,8 +33,8 @@ import org.apache.commons.lang.StringUtils;
 import com.raytheon.uf.edex.ogc.common.OgcException;
 import com.raytheon.uf.edex.ogc.common.OgcException.Code;
 import com.raytheon.uf.edex.ogc.common.spatial.CoordinateUtil;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Envelope;
 
 /**
  * Convert GML 3.1.1 envelopes to JTS envelopes

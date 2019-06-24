@@ -24,7 +24,7 @@ import java.util.List;
 import com.raytheon.uf.common.time.DataTime;
 import com.raytheon.uf.edex.ogc.common.OgcGeoBoundingBox;
 import com.raytheon.uf.edex.ogc.common.spatial.Composite3DBoundingBox;
-import com.vividsolutions.jts.geom.Polygon;
+import org.locationtech.jts.geom.Polygon;
 
 /**
  * Represents the response to a Web Coverage Service describe coverage request

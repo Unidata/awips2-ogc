@@ -19,16 +19,15 @@
  **/
 package com.raytheon.uf.edex.ogc.common.gml3_1_1;
 
-import net.opengis.gml.v_3_1_1.AbstractGeometryType;
-
 import org.geotools.geometry.jts.JTS;
 import org.jvnet.jaxb2_commons.locator.DefaultRootObjectLocator;
 import org.jvnet.ogc.gml.v_3_1_1.jts.ConversionFailedException;
 import org.jvnet.ogc.gml.v_3_1_1.jts.GML311ToJTSGeometryConverter;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.ParseException;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.ParseException;
+import net.opengis.gml.v_3_1_1.AbstractGeometryType;
 
 /**
  * Converts GML 3.1.1 objects to JTS
@@ -44,19 +43,18 @@ import com.vividsolutions.jts.io.ParseException;
  * </pre>
  * 
  * @author bclement
- * @version 1.0
  */
 public class GeometryConverter {
 
-	public Geometry convert(Envelope env) throws ParseException {
-		return JTS.toGeometry(env);
-	}
+    public Geometry convert(Envelope env) throws ParseException {
+        return JTS.toGeometry(env);
+    }
 
-	public Geometry convert(AbstractGeometryType value)
-			throws ConversionFailedException {
-		GML311ToJTSGeometryConverter converter = new GML311ToJTSGeometryConverter();
-		return converter.createGeometry(new DefaultRootObjectLocator(value),
-				value);
-	}
+    public Geometry convert(AbstractGeometryType value)
+            throws ConversionFailedException {
+        GML311ToJTSGeometryConverter converter = new GML311ToJTSGeometryConverter();
+        return converter.createGeometry(new DefaultRootObjectLocator(value),
+                value);
+    }
 
 }

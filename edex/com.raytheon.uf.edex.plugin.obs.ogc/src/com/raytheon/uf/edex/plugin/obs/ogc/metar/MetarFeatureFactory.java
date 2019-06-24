@@ -40,12 +40,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.measure.Unit;
 import javax.measure.quantity.Pressure;
-import javax.measure.unit.SI;
-import javax.measure.unit.Unit;
 
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.locationtech.jts.geom.Point;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
@@ -57,7 +57,9 @@ import com.raytheon.uf.common.dataplugin.obs.metar.util.WeatherCondition;
 import com.raytheon.uf.common.geospatial.MapUtil;
 import com.raytheon.uf.common.util.CollectionUtil;
 import com.raytheon.uf.edex.ogc.common.feature.FeatureFactory;
-import com.vividsolutions.jts.geom.Point;
+
+import si.uom.SI;
+import tec.uom.se.unit.MetricPrefix;
 
 /**
  * 
@@ -226,7 +228,7 @@ public class MetarFeatureFactory implements FeatureFactory {
 	 * @return
 	 */
 	protected static String get3HrPress(float press) {
-        Unit<Pressure> unit = SI.HECTO(SI.PASCAL);
+        Unit<Pressure> unit = MetricPrefix.HECTO((SI.PASCAL));
 		return String.format("%f %s", press, unit.toString());
 	}
 

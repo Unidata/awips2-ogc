@@ -58,7 +58,7 @@ import com.raytheon.uf.edex.wmts.reg.WmtsSource;
 import com.raytheon.uf.edex.wmts.tiling.TileMatrix;
 import com.raytheon.uf.edex.wmts.tiling.TileMatrixFactory;
 import com.raytheon.uf.edex.wmts.tiling.TileMatrixSet;
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
 
 /**
  * Abstract class for Web Map Tile Service sources that use static

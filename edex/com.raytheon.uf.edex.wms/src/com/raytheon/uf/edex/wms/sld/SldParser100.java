@@ -24,8 +24,8 @@ import java.util.Map;
 
 import org.geotools.sld.SLDConfiguration;
 import org.geotools.styling.StyledLayerDescriptor;
-import org.geotools.xml.DOMParser;
-import org.geotools.xml.Parser;
+import org.geotools.xsd.DOMParser;
+import org.geotools.xsd.Parser;
 import org.w3c.dom.Document;
 
 /**

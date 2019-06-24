@@ -13,11 +13,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.measure.Unit;
 import javax.measure.quantity.Length;
-import javax.measure.unit.NonSI;
-import javax.measure.unit.SI;
-import javax.measure.unit.Unit;
-import javax.measure.unit.UnitFormat;
+
+import systems.uom.common.USCustomary;
+import tec.uom.se.format.SimpleUnitFormat;
+import tec.uom.se.unit.MetricPrefix;
 
 /**
  * Vertical level information which can be a point or range.
@@ -37,11 +38,12 @@ import javax.measure.unit.UnitFormat;
  */
 public class VerticalCoordinate implements Comparable<VerticalCoordinate> {
     
-    public static final Unit<Length> FLIGHT_LEVEL_UNIT = SI.HECTO(NonSI.FOOT);
+    public static final Unit<Length> FLIGHT_LEVEL_UNIT = MetricPrefix
+            .HECTO(USCustomary.FOOT);
     
     static {
-        UnitFormat.getInstance().alias(FLIGHT_LEVEL_UNIT, "FL");
-        UnitFormat.getInstance().label(FLIGHT_LEVEL_UNIT, "FL");
+        SimpleUnitFormat.getInstance().alias(FLIGHT_LEVEL_UNIT, "FL");
+        SimpleUnitFormat.getInstance().label(FLIGHT_LEVEL_UNIT, "FL");
     }
 
     public static enum Reference {

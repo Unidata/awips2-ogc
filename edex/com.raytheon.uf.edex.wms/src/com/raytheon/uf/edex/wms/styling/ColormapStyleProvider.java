@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.measure.converter.UnitConverter;
-import javax.measure.unit.Unit;
+import javax.measure.Unit;
+import javax.measure.UnitConverter;
 
 import org.apache.commons.collections.map.LRUMap;
 import org.geotools.coverage.grid.GridCoverage2D;

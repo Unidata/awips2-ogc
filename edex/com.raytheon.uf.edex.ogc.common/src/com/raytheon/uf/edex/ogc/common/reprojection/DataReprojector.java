@@ -62,8 +62,8 @@ import com.raytheon.uf.common.status.UFStatus;
 import com.raytheon.uf.common.util.concurrent.KeyLock;
 import com.raytheon.uf.common.util.concurrent.KeyLocker;
 import com.raytheon.uf.edex.ogc.common.reprojection.AbstractDataReprojector.RequestWrapper;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Envelope;
 
 /**
  * Retrieves data from the datastore in requested projection.

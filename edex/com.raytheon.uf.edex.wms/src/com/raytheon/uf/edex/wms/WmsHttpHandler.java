@@ -51,7 +51,7 @@ import com.raytheon.uf.edex.wms.provider.OgcWmsProvider;
 import com.raytheon.uf.edex.wms.provider.WmsLayerManager;
 import com.raytheon.uf.edex.wms.sld.SldParser;
 import com.raytheon.uf.edex.wms.sld.SldParserRegistry;
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
 
 /**
  * OGC Web Map Service HTTP handler for processing REST requests

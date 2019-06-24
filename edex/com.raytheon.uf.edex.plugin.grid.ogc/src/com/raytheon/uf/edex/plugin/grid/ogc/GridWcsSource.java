@@ -19,6 +19,7 @@
  **/
 package com.raytheon.uf.edex.plugin.grid.ogc;
 
+import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -31,7 +32,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 
-import javax.measure.unit.Unit;
+import javax.measure.Unit;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.collections.map.LRUMap;
@@ -45,9 +46,6 @@ import org.hibernate.criterion.Restrictions;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.crs.ProjectedCRS;
-
-import ucar.units.UnitException;
-import ucar.units.UnitFormatManager;
 
 import com.raytheon.uf.common.dataplugin.PluginProperties;
 import com.raytheon.uf.common.dataplugin.grid.GridRecord;
@@ -70,6 +68,10 @@ import com.raytheon.uf.edex.wcs.reg.DefaultWcsSource;
 import com.raytheon.uf.edex.wcs.reg.RangeAxis;
 import com.raytheon.uf.edex.wcs.reg.RangeField;
 
+import tec.uom.se.format.SimpleUnitFormat;
+import ucar.units.UnitException;
+import ucar.units.UnitFormatManager;
+
 /**
  * Provides the OGC Web Coverage Service access to grid plugin data
  * 
@@ -80,6 +82,7 @@ import com.raytheon.uf.edex.wcs.reg.RangeField;
  * Date         Ticket#    Engineer    Description
  * ------------ ---------- ----------- --------------------------
  * May 6, 2013             bclement     Initial creation
+ * May 8, 2019  7596       tgurney      Fixes for Units upgrade
  * 
  * </pre>
  * 
@@ -142,7 +145,8 @@ public class GridWcsSource extends
                 private Unit<?> getUnit(String str) {
                     Unit<?> rval = cache.get(str);
                     if (rval == null) {
-                        rval = Unit.valueOf(str);
+                        rval = SimpleUnitFormat.getInstance()
+                                .parseProductUnit(str, new ParsePosition(0));
                         cache.put(str, rval);
                     }
                     return rval;
@@ -174,7 +178,9 @@ public class GridWcsSource extends
                         String unitStr = l.getUnits();
                         Unit<?> unit = cache.get(unitStr);
                         if (unit == null) {
-                            unit = Unit.valueOf(unitStr);
+                            unit = SimpleUnitFormat.getInstance()
+                                    .parseProductUnit(unitStr,
+                                            new ParsePosition(0));
                             cache.put(unitStr, unit);
                         }
                         levelName = sample.getName().substring(

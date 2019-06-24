@@ -33,6 +33,24 @@ import java.util.TimeZone;
 
 import javax.xml.bind.JAXBElement;
 
+import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.jvnet.ogc.gml.v_3_1_1.jts.JTSToGML311CoordinateConverter;
+import org.jvnet.ogc.gml.v_3_1_1.jts.JTSToGML311LinearRingConverter;
+import org.jvnet.ogc.gml.v_3_1_1.jts.JTSToGML311PolygonConverter;
+import org.jvnet.ogc.gml.v_3_1_1.jts.JTSToGML311SRSReferenceGroupConverter;
+import org.locationtech.jts.geom.Polygon;
+
+import com.raytheon.uf.common.time.DataTime;
+import com.raytheon.uf.common.time.TimeRange;
+import com.raytheon.uf.edex.ogc.common.spatial.Composite3DBoundingBox;
+import com.raytheon.uf.edex.ogc.common.spatial.CrsLookup;
+import com.raytheon.uf.edex.ogc.common.spatial.VerticalCoordinate;
+import com.raytheon.uf.edex.wcs.reg.CoverageDescription;
+import com.raytheon.uf.edex.wcs.reg.RangeAxis;
+import com.raytheon.uf.edex.wcs.reg.RangeField;
+import com.raytheon.uf.edex.wcs.reg.RangeField.InterpolationType;
+import com.raytheon.uf.edex.wcs.reg.RangeFieldDefinition;
+
 import net.opengis.gml.v_3_1_1.PolygonType;
 import net.opengis.gml.v_3_1_1.TimePositionType;
 import net.opengis.ows.v_1_1_0.AllowedValues;
@@ -55,24 +73,6 @@ import net.opengis.wcs.v_1_1_2.RangeType;
 import net.opengis.wcs.v_1_1_2.SpatialDomainType;
 import net.opengis.wcs.v_1_1_2.TimePeriodType;
 import net.opengis.wcs.v_1_1_2.TimeSequenceType;
-
-import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.jvnet.ogc.gml.v_3_1_1.jts.JTSToGML311CoordinateConverter;
-import org.jvnet.ogc.gml.v_3_1_1.jts.JTSToGML311LinearRingConverter;
-import org.jvnet.ogc.gml.v_3_1_1.jts.JTSToGML311PolygonConverter;
-import org.jvnet.ogc.gml.v_3_1_1.jts.JTSToGML311SRSReferenceGroupConverter;
-
-import com.raytheon.uf.common.time.DataTime;
-import com.raytheon.uf.common.time.TimeRange;
-import com.raytheon.uf.edex.ogc.common.spatial.Composite3DBoundingBox;
-import com.raytheon.uf.edex.ogc.common.spatial.CrsLookup;
-import com.raytheon.uf.edex.ogc.common.spatial.VerticalCoordinate;
-import com.raytheon.uf.edex.wcs.reg.CoverageDescription;
-import com.raytheon.uf.edex.wcs.reg.RangeAxis;
-import com.raytheon.uf.edex.wcs.reg.RangeField;
-import com.raytheon.uf.edex.wcs.reg.RangeField.InterpolationType;
-import com.raytheon.uf.edex.wcs.reg.RangeFieldDefinition;
-import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Builds a Web Coverage Service describe coverage response object

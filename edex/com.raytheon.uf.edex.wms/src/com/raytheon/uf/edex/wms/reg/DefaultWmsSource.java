@@ -53,7 +53,7 @@ import com.raytheon.uf.edex.wms.WmsException.Code;
 import com.raytheon.uf.edex.wms.styling.ICoverageStyleProvider;
 import com.raytheon.uf.edex.wms.styling.IWmsDataRetriever;
 import com.raytheon.uf.edex.wms.styling.WmsStyleChoice;
-import com.vividsolutions.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Coordinate;
 
 /**
  * Abstract coverage-based (gridded data) OGC Web Map Service plugin

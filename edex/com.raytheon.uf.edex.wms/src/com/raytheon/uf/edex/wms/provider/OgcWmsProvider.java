@@ -114,8 +114,8 @@ import com.raytheon.uf.edex.wms.WmsHttpHandler;
 import com.raytheon.uf.edex.wms.reg.WmsImage;
 import com.raytheon.uf.edex.wms.reg.WmsSource;
 import com.raytheon.uf.edex.wms.util.StyleUtility;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Envelope;
 
 /**
  * OGC Web Map Service implementation for version 1.3.0

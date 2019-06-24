@@ -9,7 +9,7 @@
  */
 package com.raytheon.uf.edex.ogc.common.spatial;
 
-import javax.measure.unit.Unit;
+import javax.measure.Unit;
 
 /**
  * Adapter for vertical spatial information

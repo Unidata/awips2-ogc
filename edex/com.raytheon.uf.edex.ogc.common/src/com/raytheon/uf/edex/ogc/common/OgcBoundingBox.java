@@ -19,7 +19,7 @@
  **/
 package com.raytheon.uf.edex.ogc.common;
 
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
 
 /**
  * Bounding box with arbitrary CRS that also stored resolution information.

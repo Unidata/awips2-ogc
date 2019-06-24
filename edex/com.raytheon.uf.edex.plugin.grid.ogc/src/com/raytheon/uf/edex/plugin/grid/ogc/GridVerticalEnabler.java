@@ -9,8 +9,7 @@
  */
 package com.raytheon.uf.edex.plugin.grid.ogc;
 
-import javax.measure.unit.SI;
-import javax.measure.unit.Unit;
+import javax.measure.Unit;
 
 import com.raytheon.uf.common.dataplugin.grid.GridRecord;
 import com.raytheon.uf.common.dataplugin.level.Level;
@@ -18,6 +17,8 @@ import com.raytheon.uf.common.dataplugin.level.MasterLevel;
 import com.raytheon.uf.edex.ogc.common.spatial.VerticalCoordinate;
 import com.raytheon.uf.edex.ogc.common.spatial.VerticalCoordinate.Reference;
 import com.raytheon.uf.edex.ogc.common.spatial.VerticalEnabled;
+
+import si.uom.SI;
 
 /**
  * Provides vertical axis (level) information for grid records
@@ -56,7 +57,7 @@ public class GridVerticalEnabler implements VerticalEnabled<GridRecord> {
             ref = Reference.PRESSURE_LEVEL;
         } else if ("FHAG".equalsIgnoreCase(master.getName())) {
             ref = Reference.ABOVE_GROUND;
-        } else if (SI.METER.isCompatible(master.getUnit())) {
+        } else if (SI.METRE.isCompatible(master.getUnit())) {
             ref = Reference.ABOVE_MSL;
         } else {
             ref = Reference.UNKNOWN;

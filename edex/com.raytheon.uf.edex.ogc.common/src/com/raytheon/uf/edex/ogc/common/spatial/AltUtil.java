@@ -9,11 +9,13 @@
  */
 package com.raytheon.uf.edex.ogc.common.spatial;
 
-import javax.measure.converter.ConversionException;
-import javax.measure.unit.SI;
-import javax.measure.unit.Unit;
+import javax.measure.UnconvertibleException;
+import javax.measure.Unit;
 
+import com.raytheon.uf.common.units.UnitConv;
 import com.raytheon.uf.edex.ogc.common.spatial.VerticalCoordinate.Reference;
+
+import si.uom.SI;
 
 /**
  * Altitude utility methods and constants
@@ -25,11 +27,11 @@ import com.raytheon.uf.edex.ogc.common.spatial.VerticalCoordinate.Reference;
  * Date         Ticket#    Engineer    Description
  * ------------ ---------- ----------- --------------------------
  * Apr 4, 2013            bclement     Initial creation
+ * May 8, 2019  7596      tgurney      Fixes for Units upgrade
  * 
  * </pre>
  * 
  * @author bclement
- * @version 1.0
  */
 public class AltUtil {
 
@@ -94,10 +96,11 @@ public class AltUtil {
      * @param srcUnits
      * @param value
      * @return
-     * @throws ConversionException
+     * @throws UnconvertibleException
      */
     public static double convert(Unit<?> targetUnits, Unit<?> srcUnits,
-            double value) throws ConversionException {
+            double value)
+            throws UnconvertibleException {
         if (targetUnits == null || srcUnits == null) {
             return value;
         }
@@ -105,20 +108,25 @@ public class AltUtil {
             return value;
         }
         if (targetUnits.isCompatible(srcUnits)) {
-            return srcUnits.getConverterTo(targetUnits).convert(value);
+            return UnitConv.getConverterToUnchecked(srcUnits, targetUnits)
+                    .convert(value);
         }
         if (srcUnits.isCompatible(SI.PASCAL)
-                && targetUnits.isCompatible(SI.METER)) {
-            double inPa = srcUnits.getConverterTo(SI.PASCAL).convert(value);
+                && targetUnits.isCompatible(SI.METRE)) {
+            double inPa = UnitConv.getConverterToUnchecked(srcUnits, SI.PASCAL)
+                    .convert(value);
             double inM = mbToMeters(inPa / 100);
-            return SI.METER.getConverterTo(targetUnits).convert(inM);
-        } else if (srcUnits.isCompatible(SI.METER)
+            return UnitConv.getConverterToUnchecked(SI.METRE, targetUnits)
+                    .convert(inM);
+        } else if (srcUnits.isCompatible(SI.METRE)
                 && targetUnits.isCompatible(SI.PASCAL)) {
-            double inM = srcUnits.getConverterTo(SI.METER).convert(value);
+            double inM = UnitConv.getConverterToUnchecked(srcUnits, SI.METRE)
+                    .convert(value);
             double inPa = metersToMb(inM) * 100;
-            return SI.PASCAL.getConverterTo(targetUnits).convert(inPa);
+            return UnitConv.getConverterToUnchecked(SI.PASCAL, targetUnits)
+                    .convert(inPa);
         } else {
-            throw new ConversionException("Unable to find converter between "
+            throw new UnconvertibleException("Unable to find converter between "
                     + srcUnits
                     + " and " + targetUnits);
         }
@@ -131,11 +139,11 @@ public class AltUtil {
      * @param targetRef
      * @param vert
      * @return
-     * @throws ConversionException
+     * @throws UnconvertibleException
      */
     public static VerticalCoordinate convert(Unit<?> targetUnits,
             Reference targetRef, VerticalCoordinate vert)
-            throws ConversionException {
+            throws UnconvertibleException {
         if (targetUnits == null) {
             return vert;
         }
@@ -145,13 +153,13 @@ public class AltUtil {
             return vert;
         }
         if (!vert.isRange()) {
-            return new VerticalCoordinate(convert(targetUnits, srcUnits,
-                    vert.getValue()), targetUnits, targetRef);
-        } else {
-            return new VerticalCoordinate(convert(targetUnits, srcUnits,
-                    vert.getMin()), convert(targetUnits, srcUnits,
-                    vert.getMax()), targetUnits, targetRef);
+            return new VerticalCoordinate(
+                    convert(targetUnits, srcUnits, vert.getValue()),
+                    targetUnits, targetRef);
         }
+        return new VerticalCoordinate(
+                convert(targetUnits, srcUnits, vert.getMin()),
+                convert(targetUnits, srcUnits, vert.getMax()), targetUnits,
+                targetRef);
     }
-
 }

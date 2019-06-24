@@ -28,10 +28,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.measure.unit.SI;
-
 import org.apache.commons.lang.StringUtils;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LinearRing;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.raytheon.uf.common.status.IUFStatusHandler;
@@ -52,9 +53,9 @@ import com.raytheon.uf.edex.ogc.common.urn.URNLookup;
 import com.raytheon.uf.edex.wcs.WcsConfig;
 import com.raytheon.uf.edex.wcs.WcsException;
 import com.raytheon.uf.edex.wcs.WcsException.Code;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LinearRing;
+
+import si.uom.SI;
+import tec.uom.se.unit.MetricPrefix;
 
 /**
  * Base class for utilities that extract coverage metadata from OGC layer
@@ -108,7 +109,8 @@ public abstract class CoverageTransform<D extends SimpleDimension, L extends Sim
             for (Composite3DBoundingBox box : bboxes) {
                 if (box.hasVertical()) {
                     VerticalCoordinate vert = box.getVertical();
-                    vert = AltUtil.convert(SI.KILOMETER, Reference.UNKNOWN,
+                    vert = AltUtil.convert(MetricPrefix.KILO(SI.METRE),
+                            Reference.UNKNOWN,
                             vert);
                     newList.add(new Composite3DBoundingBox(box.getHorizontal(),
                             box.getNative2DCrsUrn(), vert));

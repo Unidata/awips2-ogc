@@ -49,8 +49,8 @@ import com.raytheon.uf.edex.wfs.reg.WfsRegistryImpl;
 import com.raytheon.uf.edex.wfs.request.FeatureQuery;
 import com.raytheon.uf.edex.wfs.request.GetFeatureReq;
 import com.raytheon.uf.edex.wfs.request.QualifiedName;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Polygon;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Polygon;
 
 /**
  * Abstract base for retrieving features from storage

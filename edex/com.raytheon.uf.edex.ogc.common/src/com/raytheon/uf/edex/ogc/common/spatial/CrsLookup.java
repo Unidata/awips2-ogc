@@ -22,12 +22,12 @@ package com.raytheon.uf.edex.ogc.common.spatial;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.ParsePosition;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.measure.quantity.Quantity;
-import javax.measure.unit.SI;
-import javax.measure.unit.Unit;
+import javax.measure.Quantity;
+import javax.measure.Unit;
 
 import org.apache.commons.collections.map.LRUMap;
 import org.geotools.geometry.jts.ReferencedEnvelope;
@@ -51,6 +51,9 @@ import com.raytheon.uf.edex.ogc.common.OgcException;
 import com.raytheon.uf.edex.ogc.common.OgcException.Code;
 import com.raytheon.uf.edex.ogc.common.spatial.VerticalCoordinate.Reference;
 
+import si.uom.SI;
+import tec.uom.se.format.SimpleUnitFormat;
+
 /**
  * Coordinate Reference System utility methods and constants. Used to parse CRS
  * codes and URNs to geotools objects and format geotools objects for output.
@@ -64,11 +67,11 @@ import com.raytheon.uf.edex.ogc.common.spatial.VerticalCoordinate.Reference;
  * Feb 17, 2012            bclement     Initial creation
  * Nov 19, 2015 5087       bclement     reformatted and added DefinedCrsAuthority lookup
  * Nov 23, 2015 5087       bclement     safety check if DefinedCrsAuthority isn't provided
+ * May 8, 2019  7596       tgurney      Fixes for Units upgrade
  * 
  * </pre>
  * 
  * @author bclement
- * @version 1.0
  */
 public class CrsLookup {
 
@@ -146,7 +149,8 @@ public class CrsLookup {
             throws NoSuchAuthorityCodeException, FactoryException, OgcException {
         String base2dName = m.group(1);
         CoordinateReferenceSystem base2d = lookupFromCache(base2dName);
-        Unit<? extends Quantity> units = Unit.valueOf(m.group(2));
+        Unit<? extends Quantity> units = SimpleUnitFormat.getInstance()
+                .parseProductUnit(m.group(2), new ParsePosition(0));
         Reference ref = Reference.UNKNOWN;
         if (m.group(4) != null) {
             ref = Reference.fromAbbreviation(m.group(4).toUpperCase());
@@ -267,7 +271,7 @@ public class CrsLookup {
             return getGoogleCrs();
         }
         if (crs.equalsIgnoreCase("epsg:4979")) {
-            return create3d(crs, MapUtil.LATLON_PROJECTION, SI.METER,
+            return create3d(crs, MapUtil.LATLON_PROJECTION, SI.METRE,
                     Reference.ABOVE_ELLIPSOID);
         }
         return CRS.decode(crs, true);

@@ -29,7 +29,7 @@ import org.opengis.feature.simple.SimpleFeature;
 
 import com.raytheon.uf.edex.ogc.common.OgcLayer;
 import com.raytheon.uf.edex.wms.WmsException;
-import com.vividsolutions.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Coordinate;
 
 /**
  * Interface for providing the OGC Web Map Service access to plugin data

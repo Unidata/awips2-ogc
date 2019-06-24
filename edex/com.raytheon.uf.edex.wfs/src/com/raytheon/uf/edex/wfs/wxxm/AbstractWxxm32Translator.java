@@ -22,32 +22,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.measure.Measure;
+import javax.measure.Quantity;
+import javax.measure.Unit;
 import javax.measure.quantity.Angle;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Pressure;
-import javax.measure.quantity.Quantity;
+import javax.measure.quantity.Speed;
 import javax.measure.quantity.Temperature;
-import javax.measure.quantity.Velocity;
-import javax.measure.unit.NonSI;
-import javax.measure.unit.SI;
-import javax.measure.unit.Unit;
 import javax.xml.bind.JAXBElement;
 
-import net.opengis.gml.v_3_2_1.AbstractGeometryType;
-import net.opengis.gml.v_3_2_1.AbstractTimeObjectType;
-import net.opengis.gml.v_3_2_1.CodeWithAuthorityType;
-import net.opengis.gml.v_3_2_1.DirectPositionType;
-import net.opengis.gml.v_3_2_1.FeaturePropertyType;
-import net.opengis.gml.v_3_2_1.LocationPropertyType;
-import net.opengis.gml.v_3_2_1.PointType;
-import net.opengis.gml.v_3_2_1.TimeInstantPropertyType;
-import net.opengis.gml.v_3_2_1.TimeInstantType;
-import net.opengis.gml.v_3_2_1.TimePeriodType;
-import net.opengis.gml.v_3_2_1.TimePositionType;
-import net.opengis.om.v_1_0_0_gml32.ProcessPropertyType;
-import net.opengis.swe.v_1_0_1_gml32.PhenomenonPropertyType;
-import net.opengis.swe.v_1_0_1_gml32.TimeObjectPropertyType;
+import org.locationtech.jts.geom.Geometry;
 
 import com.eurocontrol.avwx.v_1_1_1.AirspaceType;
 import com.eurocontrol.avwx.v_1_1_1.ObjectFactory;
@@ -81,7 +65,25 @@ import com.raytheon.uf.edex.ogc.common.gml3_2_1.GeometryConverter;
 import com.raytheon.uf.edex.wfs.WfsFeatureType;
 import com.raytheon.uf.edex.wfs.reg.AbstractWfsSource;
 import com.raytheon.uf.edex.wfs.request.QualifiedName;
-import com.vividsolutions.jts.geom.Geometry;
+
+import net.opengis.gml.v_3_2_1.AbstractGeometryType;
+import net.opengis.gml.v_3_2_1.AbstractTimeObjectType;
+import net.opengis.gml.v_3_2_1.CodeWithAuthorityType;
+import net.opengis.gml.v_3_2_1.DirectPositionType;
+import net.opengis.gml.v_3_2_1.FeaturePropertyType;
+import net.opengis.gml.v_3_2_1.LocationPropertyType;
+import net.opengis.gml.v_3_2_1.PointType;
+import net.opengis.gml.v_3_2_1.TimeInstantPropertyType;
+import net.opengis.gml.v_3_2_1.TimeInstantType;
+import net.opengis.gml.v_3_2_1.TimePeriodType;
+import net.opengis.gml.v_3_2_1.TimePositionType;
+import net.opengis.om.v_1_0_0_gml32.ProcessPropertyType;
+import net.opengis.swe.v_1_0_1_gml32.PhenomenonPropertyType;
+import net.opengis.swe.v_1_0_1_gml32.TimeObjectPropertyType;
+import si.uom.NonSI;
+import si.uom.SI;
+import systems.uom.common.USCustomary;
+import tec.uom.se.quantity.Quantities;
 
 /**
  * Abstract base for translation between data records and WXXM GML JAXB objects
@@ -92,13 +94,13 @@ import com.vividsolutions.jts.geom.Geometry;
  * 
  * Date         Ticket#    Engineer    Description
  * ------------ ---------- ----------- --------------------------
- * Nov 27, 2012            bclement     Initial creation
+ * Nov 27, 2012            bclement    Initial creation
  * Jun 18, 2014 2061       bsteffen    Replace Amount with Measure
+ * May 8, 2019  7596       tgurney     Fixes for Geotools and Units upgrade
  * 
  * </pre>
  * 
  * @author bclement
- * @version 1.0
  */
 
 public abstract class AbstractWxxm32Translator<T extends PluginDataObject>
@@ -309,11 +311,11 @@ public abstract class AbstractWxxm32Translator<T extends PluginDataObject>
      * @param amount
      * @return null if amount is null
      */
-    protected PressureType getPressure(Measure<?, Pressure> amount) {
+    protected PressureType getPressure(Quantity<Pressure> amount) {
         if (amount == null) {
             return null;
         }
-        double paValue = amount.doubleValue(SI.PASCAL);
+        double paValue = amount.to(SI.PASCAL).getValue().doubleValue();
         PressureType rval = new PressureType();
         rval.setValue(paValue);
         rval.setUom(UomPressureType.PA);
@@ -325,12 +327,12 @@ public abstract class AbstractWxxm32Translator<T extends PluginDataObject>
      * @param uom
      * @return null if value is null
      */
-    protected <Q extends Quantity> Measure<Double, Q> createAmount(
-            Double value, Unit<Q> uom) {
+    protected <Q extends Quantity<Q>> Quantity<Q> createAmount(
+            Number value, Unit<Q> uom) {
         if (value == null) {
             return null;
         }
-        return Measure.valueOf(value, uom);
+        return Quantities.getQuantity(value, uom);
     }
 
     /**
@@ -338,25 +340,12 @@ public abstract class AbstractWxxm32Translator<T extends PluginDataObject>
      * @param uom
      * @return null if value is null
      */
-    protected <Q extends Quantity> Measure<Double, Q> createAmount(
+    protected <Q extends Quantity<Q>> Quantity<Q> createAmount(
             double value, Unit<Q> uom, double missingVal) {
         if (value == missingVal) {
             return null;
         }
-        return Measure.valueOf(value, uom);
-    }
-
-    /**
-     * @param value
-     * @param uom
-     * @return null if value is null
-     */
-    protected <Q extends Quantity> Measure<Integer, Q> createAmount(
-            Integer value, Unit<Q> uom) {
-        if (value == null) {
-            return null;
-        }
-        return Measure.valueOf(value, uom);
+        return Quantities.getQuantity(value, uom);
     }
 
     /**
@@ -390,11 +379,11 @@ public abstract class AbstractWxxm32Translator<T extends PluginDataObject>
      * @param amount
      * @return null if amount is null
      */
-    protected AirTemperatureType getAirTemp(Measure<?, Temperature> amount) {
+    protected AirTemperatureType getAirTemp(Quantity<Temperature> amount) {
         if (amount == null) {
             return null;
         }
-        double celValue = amount.doubleValue(SI.CELSIUS);
+        double celValue = amount.to((SI.CELSIUS)).getValue().doubleValue();
         return getAirTemp(celValue, UomTemperatureType.C);
     }
 
@@ -404,11 +393,11 @@ public abstract class AbstractWxxm32Translator<T extends PluginDataObject>
      * @param amount
      * @return null if amount is null
      */
-    protected WindSpeedType getWindSpeed(Measure<?, Velocity> amount) {
+    protected WindSpeedType getWindSpeed(Quantity<Speed> amount) {
         if (amount == null) {
             return null;
         }
-        double knotVal = amount.doubleValue(NonSI.KNOT);
+        double knotVal = amount.to(USCustomary.KNOT).getValue().doubleValue();
         WindSpeedType rval = new WindSpeedType();
         rval.setValue(knotVal);
         rval.setUom(UomSpeedType.KT);
@@ -421,11 +410,12 @@ public abstract class AbstractWxxm32Translator<T extends PluginDataObject>
      * @param amount
      * @return null if amount is null
      */
-    protected WindDirectionType getWindDir(Measure<?, Angle> amount) {
+    protected WindDirectionType getWindDir(Quantity<Angle> amount) {
         if (amount == null) {
             return null;
         }
-        double degValue = amount.doubleValue(NonSI.DEGREE_ANGLE);
+        double degValue = amount.to(NonSI.DEGREE_ANGLE).getValue()
+                .doubleValue();
         WindDirectionType rval = new WindDirectionType();
         rval.setValue(degValue);
         rval.setUom(UomAngleType.DEG);
@@ -565,11 +555,11 @@ public abstract class AbstractWxxm32Translator<T extends PluginDataObject>
      * @param amount
      * @return null if amount is null
      */
-    protected VerticalDistanceType getVertDist(Measure<?, Length> amount) {
+    protected VerticalDistanceType getVertDist(Quantity<Length> amount) {
         if (amount == null) {
             return null;
         }
-        double ftValue = amount.doubleValue(NonSI.FOOT);
+        double ftValue = amount.to(USCustomary.FOOT).getValue().doubleValue();
         VerticalDistanceType rval = new VerticalDistanceType();
         rval.setValue(ftValue);
         rval.setUom(UomDistanceType.FT);
@@ -651,8 +641,8 @@ public abstract class AbstractWxxm32Translator<T extends PluginDataObject>
      * @return
      */
     protected FeaturePropertyType createFeatureOfInterest(
-            JAXBElement<AbstractGeometryType> geom, Measure<?, Length> base,
-            Measure<?, Length> top) {
+            JAXBElement<AbstractGeometryType> geom, Quantity<Length> base,
+            Quantity<Length> top) {
         FeaturePropertyType rval = new FeaturePropertyType();
         AirspaceType airspaceType = avFactory.createAirspaceType();
         if (base != null) {

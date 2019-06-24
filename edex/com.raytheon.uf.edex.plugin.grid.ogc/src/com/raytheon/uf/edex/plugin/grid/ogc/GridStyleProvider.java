@@ -9,7 +9,7 @@
  */
 package com.raytheon.uf.edex.plugin.grid.ogc;
 
-import javax.measure.unit.Unit;
+import javax.measure.Unit;
 
 import com.raytheon.uf.common.dataplugin.PluginException;
 import com.raytheon.uf.common.dataplugin.grid.GridRecord;

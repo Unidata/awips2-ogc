@@ -11,7 +11,7 @@ package com.raytheon.uf.edex.ogc.common.filter;
 
 import java.util.Map;
 
-import javax.measure.unit.Unit;
+import javax.measure.Unit;
 
 import org.apache.commons.collections.map.LRUMap;
 
