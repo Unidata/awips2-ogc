@@ -25,12 +25,12 @@
 		</route>
 		
 		<route id="metarsPurgeExpired">
-			<from uri="jms-generic:topic:Purge.expired.obs?destinationResolver=#qpidDurableResolver" />
+			<from uri="jms-generic:topic:Purge.expired.obs?destinationResolver=#qpidDestinationResolver" />
 			<bean ref="metarLayerCollector" method="purgeExpired"/>
 		</route>
 		
 		<route id="metarPurgeAll">
-			<from uri="jms-generic:topic:Purge.all.obs?destinationResolver=#qpidDurableResolver" />
+			<from uri="jms-generic:topic:Purge.all.obs?destinationResolver=#qpidDestinationResolver" />
 			<bean ref="metarLayerCollector" method="purgeAll"/>
 		</route>
         
