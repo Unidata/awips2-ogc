@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Wfs
 Bundle-SymbolicName: com.raytheon.uf.edex.wfs
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.19.0.qualifier
 Bundle-Vendor: RAYTHEON
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.geotools;bundle-version="2.6.4",
  com.raytheon.edex.common;bundle-version="1.12.1174",
  com.raytheon.uf.edex.ogc.common;bundle-version="1.0.0",
@@ -16,14 +16,17 @@ Require-Bundle: org.geotools;bundle-version="2.6.4",
  com.raytheon.uf.edex.log;bundle-version="1.12.1174",
  com.raytheon.uf.common.localization;bundle-version="1.12.1174",
  javax.measure;bundle-version="1.0.0",
- com.sun.xml.bind;bundle-version="1.0.0",
  org.w3.xmlschema;bundle-version="1.0.0",
  com.raytheon.uf.common.pointdata;bundle-version="1.12.1174",
  org.apache.commons.collections;bundle-version="3.2.0",
  org.apache.commons.cxf;bundle-version="1.0.0",
  com.raytheon.uf.common.http,
  com.raytheon.uf.edex.soap,
- org.apache.ws.commons.schema;bundle-version="2.1.0"
+ org.apache.ws.commons.schema;bundle-version="2.1.0",
+ javax.xml.bind,
+ javax.xml.ws,
+ javax.jws,
+ javax.annotation
 Export-Package: com.raytheon.uf.edex.wfs,
  com.raytheon.uf.edex.wfs.feature,
  com.raytheon.uf.edex.wfs.filter,
@@ -41,3 +44,4 @@ Export-Package: com.raytheon.uf.edex.wfs,
  com.raytheon.uf.edex.wfs.wxxm
 Import-Package: javax.servlet,
  javax.servlet.http
+

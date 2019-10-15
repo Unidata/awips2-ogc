@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Ogc
 Bundle-SymbolicName: com.raytheon.uf.edex.plugin.obs.ogc
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.19.0.qualifier
 Bundle-Vendor: RAYTHEON
 Require-Bundle: org.geotools;bundle-version="2.6.4",
  javax.measure;bundle-version="1.0.0",
@@ -23,8 +23,9 @@ Require-Bundle: org.geotools;bundle-version="2.6.4",
  javax.persistence;bundle-version="1.0.0",
  com.raytheon.uf.edex.pointdata;bundle-version="1.12.1174",
  com.raytheon.uf.common.datastorage;bundle-version="1.12.1174",
- com.raytheon.uf.edex.wms;bundle-version="1.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+ com.raytheon.uf.edex.wms;bundle-version="1.0.0",
+ javax.xml.bind
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: com.raytheon.uf.edex.plugin.obs.ogc.metar,
  com.raytheon.uf.edex.plugin.obs.ogc.metar.feature
