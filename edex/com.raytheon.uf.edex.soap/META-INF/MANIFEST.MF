@@ -5,7 +5,7 @@ Bundle-SymbolicName: com.raytheon.uf.edex.soap
 Bundle-Version: 1.19.0.qualifier
 Bundle-Vendor: RAYTHEON
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Require-Bundle: org.apache.commons.cxf;bundle-version="3.1.14",
+Require-Bundle: org.apache.cxf,
  com.raytheon.uf.common.status,
  javax.xml.bind
 Export-Package: com.raytheon.uf.edex.soap
