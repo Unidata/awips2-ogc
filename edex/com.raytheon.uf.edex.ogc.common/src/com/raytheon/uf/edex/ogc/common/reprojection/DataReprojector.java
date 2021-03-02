@@ -21,13 +21,11 @@ package com.raytheon.uf.edex.ogc.common.reprojection;
 
 import java.awt.Point;
 import java.io.FileNotFoundException;
-import java.util.Iterator;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.media.jai.Interpolation;
 
-import org.apache.camel.com.github.benmanes.caffeine.cache.Cache;
-import org.apache.camel.com.github.benmanes.caffeine.cache.Caffeine;
 import org.apache.commons.lang.ArrayUtils;
 import org.geotools.coverage.grid.GeneralGridEnvelope;
 import org.geotools.coverage.grid.GridCoordinates2D;
@@ -37,6 +35,8 @@ import org.geotools.coverage.grid.GridGeometry2D;
 import org.geotools.geometry.DirectPosition2D;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Envelope;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.metadata.spatial.PixelOrientation;
@@ -46,6 +46,8 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform2D;
 import org.opengis.referencing.operation.TransformException;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.raytheon.uf.common.dataplugin.PluginException;
 import com.raytheon.uf.common.datastorage.IDataStore;
 import com.raytheon.uf.common.datastorage.Request;
@@ -62,8 +64,6 @@ import com.raytheon.uf.common.status.UFStatus;
 import com.raytheon.uf.common.util.concurrent.KeyLock;
 import com.raytheon.uf.common.util.concurrent.KeyLocker;
 import com.raytheon.uf.edex.ogc.common.reprojection.AbstractDataReprojector.RequestWrapper;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.Envelope;
 
 /**
  * Retrieves data from the datastore in requested projection.
@@ -80,6 +80,7 @@ import org.locationtech.jts.geom.Envelope;
  *                                  references instead of in the datastore
  * Aug 30, 2016  5867     randerso  Updated for GeoTools 15.1
  * Mar 06, 2017  6165     nabowle   Update cache for Camel 2.18.2
+ * Mar  2, 2021  8326     tgurney   Fix imports for Camel 3 + code cleanup
  *
  * </pre>
  *
@@ -101,7 +102,7 @@ public class DataReprojector {
     protected static final IUFStatusHandler log = UFStatus
             .getHandler(DataReprojector.class);
 
-    protected static final KeyLocker<String> locker = new KeyLocker<String>();
+    protected static final KeyLocker<String> locker = new KeyLocker<>();
 
     private static final Cache<String, IDataRecord> REFERENCE_CACHE = Caffeine
             .newBuilder().maximumSize(CACHE_SIZE).softValues().build();
@@ -650,11 +651,8 @@ public class DataReprojector {
         if ((ids == null) || ids.isEmpty()) {
             code = crs.getName().toString();
         } else {
-            Iterator<ReferenceIdentifier> i = ids.iterator();
-            code = i.next().toString();
-            while (i.hasNext()) {
-                code += "-" + i.next().toString();
-            }
+            code = ids.stream().map(ReferenceIdentifier::toString)
+                    .collect(Collectors.joining("-"));
         }
         return dataSetBase + code;
     }
